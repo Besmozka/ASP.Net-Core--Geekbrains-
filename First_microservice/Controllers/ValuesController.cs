@@ -56,14 +56,7 @@ namespace First_microservice.Controllers
         [HttpDelete("delete")]
         public IActionResult Delete([FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo)
         {
-            for (int i = 0; i < _holder.Values.Count; i++)
-            {
-                if (_holder.Values[i].Date >= dateFrom && _holder.Values[i].Date <= dateTo)
-                {
-                    _holder.Values.Remove(_holder.Values[i]);
-                    i--;
-                }
-            }
+            _holder.Values.RemoveAll(x => x.Date >= dateFrom && x.Date <= dateTo);
             return Ok();
         }
     }
