@@ -9,30 +9,30 @@ namespace First_microservice.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private readonly ValuesHolder holder;
+        private readonly ValuesHolder _holder;
 
         public ValuesController(ValuesHolder holder)
         {
-            this.holder = holder;
+            this._holder = holder;
         }
 
         [HttpPost("create")]
-        public IActionResult Create([FromQuery] string date, [FromQuery] int temperatureC)
+        public IActionResult Create([FromQuery] DateTime date, [FromQuery] int temperatureC)
         {
             var weatherForecast = new WeatherForecast();
-            weatherForecast.Date = Convert.ToDateTime(date);
+            weatherForecast.Date = date;
             weatherForecast.TemperatureC = temperatureC;
-            holder.Values.Add(weatherForecast);
+            _holder.Values.Add(weatherForecast);
             return Ok();
         }
 
         [HttpGet("read")]
-        public IActionResult Read([FromQuery] string dateFrom, [FromQuery] string dateTo)
+        public IActionResult Read([FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo)
         {
             var deltaDateValues = new List<WeatherForecast>();
-            foreach (var value in holder.Values)
+            foreach (var value in _holder.Values)
             {
-                if (value.Date >= Convert.ToDateTime(dateFrom) && value.Date <= Convert.ToDateTime(dateTo))
+                if (value.Date >= dateFrom && value.Date <= dateTo)
                 {
                     deltaDateValues.Add(value);
                 }
@@ -41,11 +41,11 @@ namespace First_microservice.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update([FromQuery] string date, [FromQuery] int temperatureC)
+        public IActionResult Update([FromQuery] DateTime date, [FromQuery] int temperatureC)
         {
-            foreach (var value in holder.Values)
+            foreach (var value in _holder.Values)
             {
-                if (value.Date == Convert.ToDateTime(date))
+                if (value.Date == date)
                 {
                     value.TemperatureC = temperatureC;
                 }
@@ -54,14 +54,14 @@ namespace First_microservice.Controllers
         }
 
         [HttpDelete("delete")]
-        public IActionResult Delete([FromQuery] string date)
+        public IActionResult Delete([FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo)
         {
-            foreach (var value in holder.Values)
+            for (int i = 0; i < _holder.Values.Count; i++)
             {
-                if (value.Date == Convert.ToDateTime(date))
+                if (_holder.Values[i].Date >= dateFrom && _holder.Values[i].Date <= dateTo)
                 {
-                    holder.Values.Remove(value);
-                    break;
+                    _holder.Values.Remove(_holder.Values[i]);
+                    i--;
                 }
             }
             return Ok();
