@@ -7,13 +7,21 @@ using System.Threading.Tasks;
 
 namespace MetricsManager.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/agents")]
     [ApiController]
     public class AgentsController : ControllerBase
     {
+        private readonly AgentsList agentsList;
+
+        public AgentsController(AgentsList agentsList)
+        {
+            this.agentsList = agentsList;
+        }
+
         [HttpPost("register")]
         public IActionResult RegisterAgent([FromBody] AgentInfo agentInfo)
         {
+            agentsList.agents.Add(agentInfo);
             return Ok();
         }
 
@@ -27,6 +35,12 @@ namespace MetricsManager.Controllers
         public IActionResult DisableAgentById([FromRoute] int agentId)
         {
             return Ok();
+        }
+
+        [HttpGet("numberAgents")]
+        public IActionResult GetNumberOfAgents()
+        {
+            return Ok($"Количество агентов: {agentsList.agents.Count}");
         }
     }
 }
