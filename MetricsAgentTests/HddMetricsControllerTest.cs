@@ -15,15 +15,12 @@ namespace MetricsManagerTests
         }
 
         [Fact]
-        public void GetMetricsFromAgent_ReturnsOk()
+        public void GetSizeLeft_ReturnsOk()
         {
             //Arrange
-            var agentId = 1;
-            var fromTime = TimeSpan.FromSeconds(0);
-            var toTime = TimeSpan.FromSeconds(100);
 
             //Act
-            var result = controller.GetHddMetricsFromAgent(agentId, fromTime, toTime);
+            var result = controller.GetHddSizeLeft();
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
