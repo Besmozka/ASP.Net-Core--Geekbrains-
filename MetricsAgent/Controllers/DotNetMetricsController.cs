@@ -1,5 +1,4 @@
-﻿using MetricsAgent.Enums;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 
 namespace MetricsManager.Controllers

@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace MetricsManager.Controllers
 {
@@ -11,7 +6,7 @@ namespace MetricsManager.Controllers
     [ApiController]
     public class AgentsController : ControllerBase
     {
-        private readonly AgentsList agentsList;
+        private readonly AgentsList agentsList = new AgentsList();
 
         public AgentsController(AgentsList agentsList)
         {

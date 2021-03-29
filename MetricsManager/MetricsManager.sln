@@ -5,11 +5,13 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetricsManager", "MetricsManager.csproj", "{FDB78326-BAB2-4E8A-9168-FEC9EAAE7D18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsManagerTests", "..\MetricsManagerTests\MetricsManagerTests.csproj", "{6DCFBB59-0083-4526-8050-CD7AF90EAB91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetricsManagerTests", "..\MetricsManagerTests\MetricsManagerTests.csproj", "{6DCFBB59-0083-4526-8050-CD7AF90EAB91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsAgent", "..\MetricsAgent\MetricsAgent.csproj", "{1AE8D441-A2E7-4A96-B7AB-38D9C25D650F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetricsAgent", "..\MetricsAgent\MetricsAgent.csproj", "{1AE8D441-A2E7-4A96-B7AB-38D9C25D650F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsAgentTests", "..\MetricsAgentTests\MetricsAgentTests.csproj", "{E3E59B51-432F-4A97-8952-068292C58DAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetricsAgentTests", "..\MetricsAgentTests\MetricsAgentTests.csproj", "{E3E59B51-432F-4A97-8952-068292C58DAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumsLibrary", "..\Enums\EnumsLibrary.csproj", "{4C09C64E-EC83-4BF5-993E-DAB0DF078DDC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{E3E59B51-432F-4A97-8952-068292C58DAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3E59B51-432F-4A97-8952-068292C58DAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3E59B51-432F-4A97-8952-068292C58DAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C09C64E-EC83-4BF5-993E-DAB0DF078DDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C09C64E-EC83-4BF5-993E-DAB0DF078DDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C09C64E-EC83-4BF5-993E-DAB0DF078DDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C09C64E-EC83-4BF5-993E-DAB0DF078DDC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

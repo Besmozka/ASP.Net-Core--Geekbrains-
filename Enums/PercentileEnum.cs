@@ -1,4 +1,5 @@
-﻿namespace MetricsAgent.Enums
+﻿
+namespace EnumsLibrary
 {
     public enum Percentile
     {
