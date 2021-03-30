@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Enums\EnumsLibrary.csproj" />
+	<Content Update="nlog.config" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
