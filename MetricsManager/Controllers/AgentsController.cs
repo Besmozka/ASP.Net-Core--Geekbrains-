@@ -26,6 +26,7 @@ namespace MetricsManager.Controllers
         public IActionResult RegisterAgent([FromBody] AgentInfo agentInfo)
         {
             agentsList.agents.Add(agentInfo);
+            _logger.LogInformation($"Agent Info: {agentInfo}");
             return Ok();
         }
 
