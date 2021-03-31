@@ -26,26 +26,28 @@ namespace MetricsManager.Controllers
         public IActionResult RegisterAgent([FromBody] AgentInfo agentInfo)
         {
             agentsList.agents.Add(agentInfo);
-            _logger.LogInformation($"Agent Info: {agentInfo}");
+            _logger.LogInformation($"RegisterAgent - Agent Info: {agentInfo}");
             return Ok();
         }
 
         [HttpPut("enable/{agentId}")]
         public IActionResult EnableAgentById([FromRoute] int agentId)
         {
+            _logger.LogInformation($"EnableAgentById - Agent ID: {agentId}");
             return Ok();
         }
 
         [HttpPut("disable/{agentId}")]
         public IActionResult DisableAgentById([FromRoute] int agentId)
         {
+            _logger.LogInformation($"DisableAgentById - Agent ID: {agentId}");
             return Ok();
         }
 
         [HttpGet("numberAgents")]
         public IActionResult GetNumberOfAgents()
         {
-            _logger.LogInformation("Привет!");
+            _logger.LogInformation($"GetNumberOfAgents - {agentsList.agents.Count}");
             return Ok($"Количество агентов: {agentsList.agents.Count}");
         }
     }

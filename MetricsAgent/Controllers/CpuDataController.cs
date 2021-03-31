@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Data.SQLite;
 
 namespace MetricsAgent.Controllers
@@ -7,6 +8,13 @@ namespace MetricsAgent.Controllers
     [ApiController]
     public class CpuDataController : ControllerBase
     {
+        private readonly ILogger<CpuDataController> _logger;
+        public CpuDataController(ILogger<CpuDataController> logger)
+        {
+            _logger = logger;
+            _logger.LogDebug("Nlog встроен в CpuDataController");
+        }
+
         [HttpGet("sql-test")]
         public IActionResult TryToSqlLite()
         {
