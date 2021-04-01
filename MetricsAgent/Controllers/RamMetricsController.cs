@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MetricsAgent;
+using MetricsAgent.DAL;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace MetricsManager.Controllers
@@ -7,6 +9,7 @@ namespace MetricsManager.Controllers
     [ApiController]
     public class RamMetricsController : ControllerBase
     {
+        private RamMetricsRepository _repository;
         private readonly ILogger<RamMetricsController> _logger;
         public RamMetricsController(ILogger<RamMetricsController> logger)
         {
@@ -18,6 +21,9 @@ namespace MetricsManager.Controllers
         public IActionResult GetRamAvailableSize()
         {
             _logger.LogInformation($"GetRamAvailableSize - Available:");
+            RamMetric ramMetric = new RamMetric();
+            ramMetric.Value = 0;
+            _repository.Create(ramMetric);
             return Ok();
         }
     }

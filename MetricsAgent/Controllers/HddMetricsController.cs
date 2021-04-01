@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MetricsAgent;
+using MetricsAgent.DAL;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace MetricsManager.Controllers
@@ -7,6 +9,8 @@ namespace MetricsManager.Controllers
     [ApiController]
     public class HddMetricsController : ControllerBase
     {
+        private HddMetricsRepository _repository;
+
         private readonly ILogger<HddMetricsController> _logger;
         public HddMetricsController(ILogger<HddMetricsController> logger)
         {
@@ -18,6 +22,9 @@ namespace MetricsManager.Controllers
         public IActionResult GetHddSizeLeft()
         {
             _logger.LogInformation($"GetHddSizeLeft - Left:");
+            HddMetric hddMetric = new HddMetric();
+            hddMetric.Value = 0;
+            _repository.Create(hddMetric);
             return Ok();
         }
     }

@@ -1,5 +1,6 @@
 using MetricsManager.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using Xunit;
 
@@ -9,9 +10,10 @@ namespace MetricsManagerTests
     {
         private HddMetricsController controller;
 
+        private ILogger<HddMetricsController> logger;
         public HddControllerUnitTests()
         {
-            controller = new HddMetricsController();
+            controller = new HddMetricsController(logger);
         }
 
         [Fact]

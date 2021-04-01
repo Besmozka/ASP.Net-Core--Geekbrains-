@@ -1,5 +1,6 @@
 using MetricsManager.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using Xunit;
 
@@ -9,17 +10,19 @@ namespace MetricsManagerTests
     {
         private NetworkMetricsController controller;
 
+        private ILogger<NetworkMetricsController> logger;
         public NetworkControllerUnitTests()
         {
-            controller = new NetworkMetricsController();
+            controller = new NetworkMetricsController(logger);
         }
 
         [Fact]
         public void GetMetricsTimeInterval_ReturnsOk()
         {
             //Arrange
-            var fromTime = TimeSpan.FromSeconds(0);
-            var toTime = TimeSpan.FromSeconds(100);
+            Random random = new Random();
+            var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50));
+            var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50, 100));
 
             //Act
             var result = controller.GetNetworkMetricsTimeInterval(fromTime, toTime);

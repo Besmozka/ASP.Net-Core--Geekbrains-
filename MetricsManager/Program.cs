@@ -14,7 +14,6 @@ namespace MetricsManager
             try
             {
                 logger.Debug("init main");
-                CreateHostBuilder(args).Build().Run();
             }
             // отлов всех исключений в рамках работы приложения
             catch (Exception exception)

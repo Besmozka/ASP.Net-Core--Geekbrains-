@@ -1,6 +1,7 @@
 using EnumsLibrary;
 using MetricsManager.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using Xunit;
 
@@ -10,9 +11,11 @@ namespace MetricsManagerTests
     {
         private RamMetricsController controller;
 
+        private ILogger<RamMetricsController> _logger;
+
         public RamControllerUnitTests()
         {
-            controller = new RamMetricsController();
+            controller = new RamMetricsController(_logger);
         }
 
         [Fact]
