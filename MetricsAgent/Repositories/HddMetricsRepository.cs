@@ -4,7 +4,11 @@ using System.Data.SQLite;
 
 namespace MetricsAgent.DAL
 {
-    public class HddMetricsRepository : IRepository<HddMetric>
+    public interface IHddMetricsRepository: IRepository<HddMetric>
+    {
+
+    }
+    public class HddMetricsRepository : IHddMetricsRepository
     {
         private SQLiteConnection connection;
 
@@ -48,7 +52,7 @@ namespace MetricsAgent.DAL
             cmd.ExecuteNonQuery();
         }
 
-        public IList<HddMetric> GetAll()
+        public List<HddMetric> GetAll()
         {
             using var cmd = new SQLiteCommand(connection);
 

@@ -4,7 +4,11 @@ using System.Data.SQLite;
 
 namespace MetricsAgent.DAL
 {
-    public class RamMetricsRepository : IRepository<RamMetric>
+    public interface IRamMetricsRepository: IRepository<RamMetric>
+    {
+
+    }
+    public class RamMetricsRepository : IRamMetricsRepository
     {
         private SQLiteConnection connection;
 
@@ -48,7 +52,7 @@ namespace MetricsAgent.DAL
             cmd.ExecuteNonQuery();
         }
 
-        public IList<RamMetric> GetAll()
+        public List<RamMetric> GetAll()
         {
             using var cmd = new SQLiteCommand(connection);
 

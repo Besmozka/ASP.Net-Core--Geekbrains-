@@ -9,11 +9,12 @@ namespace MetricsManager.Controllers
     [ApiController]
     public class HddMetricsController : ControllerBase
     {
-        private HddMetricsRepository _repository;
+        private IHddMetricsRepository _repository;
 
         private readonly ILogger<HddMetricsController> _logger;
-        public HddMetricsController(ILogger<HddMetricsController> logger)
+        public HddMetricsController(ILogger<HddMetricsController> logger, IHddMetricsRepository repository)
         {
+            _repository = repository;
             _logger = logger;
             _logger.LogDebug("Nlog встроен в HddMetricsController");
         }

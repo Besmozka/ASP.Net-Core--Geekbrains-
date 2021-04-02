@@ -10,11 +10,12 @@ namespace MetricsManager.Controllers
     [ApiController]
     public class DotNetMetricsController : ControllerBase
     {
-        private DotNetRepository _repository;
+        private IDotNetRepository _repository;
 
         private readonly ILogger<DotNetMetricsController> _logger;
-        public DotNetMetricsController(ILogger<DotNetMetricsController> logger)
+        public DotNetMetricsController(ILogger<DotNetMetricsController> logger, IDotNetRepository repository)
         {
+            _repository = repository;
             _logger = logger;
             _logger.LogDebug("Nlog встроен в DotNetMetricsController");
         }

@@ -4,7 +4,11 @@ using System.Data.SQLite;
 
 namespace MetricsAgent.DAL
 {
-    public class NetworkMetricsRepository : IRepository<NetworkMetric>
+    public interface INetworkMetricsRepository: IRepository<NetworkMetric>
+    {
+
+    }
+    public class NetworkMetricsRepository : INetworkMetricsRepository
     {
         private SQLiteConnection _connection;
 
@@ -48,7 +52,7 @@ namespace MetricsAgent.DAL
             cmd.ExecuteNonQuery();
         }
 
-        public IList<NetworkMetric> GetAll()
+        public List<NetworkMetric> GetAll()
         {
             using var cmd = new SQLiteCommand(_connection);
 

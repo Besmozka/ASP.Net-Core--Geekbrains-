@@ -12,10 +12,10 @@ namespace MetricsAgent.Controllers
     [ApiController]
     public class CpuMetricsController : ControllerBase
     {
-        private CpuMetricsRepository _repository;
+        private ICpuMetricsRepository _repository;
 
         private readonly ILogger<CpuMetricsController> _logger;
-        public CpuMetricsController(ILogger<CpuMetricsController> logger, CpuMetricsRepository repository)
+        public CpuMetricsController(ILogger<CpuMetricsController> logger, ICpuMetricsRepository repository)
         {
             _repository = repository;
             _logger = logger;

@@ -7,7 +7,7 @@ namespace MetricsAgent.DAL
 {
     public interface IRepository<T> where T : class
     {
-        IList<T> GetAll();
+        List<T> GetAll();
 
         T GetById(int id);
 

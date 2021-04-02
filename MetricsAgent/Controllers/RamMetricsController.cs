@@ -9,10 +9,12 @@ namespace MetricsManager.Controllers
     [ApiController]
     public class RamMetricsController : ControllerBase
     {
-        private RamMetricsRepository _repository;
+        private IRamMetricsRepository _repository;
+
         private readonly ILogger<RamMetricsController> _logger;
-        public RamMetricsController(ILogger<RamMetricsController> logger)
+        public RamMetricsController(ILogger<RamMetricsController> logger, IRamMetricsRepository repository)
         {
+            _repository = repository;
             _logger = logger;
             _logger.LogDebug("Nlog встроен в RamMetricsController");
         }

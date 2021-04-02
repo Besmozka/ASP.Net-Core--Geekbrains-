@@ -13,24 +13,21 @@ namespace MetricsManagerTests
     {
         private AgentsController controller;
 
-        private Mock<AgentsList> mock;
+        private AgentsList agentsList;
 
-        private ILogger<AgentsController> _logger;
+        private Mock<ILogger<AgentsController>> mockLogger;
 
         private int maxAgentsCount = 1000;
         public AgentsControllerUnitTests()
         {
-            mock = new Mock<AgentsList>();
-            controller = new AgentsController(_logger, mock.Object);
+            mockLogger = new Mock<ILogger<AgentsController>>();
+            controller = new AgentsController(mockLogger.Object, agentsList);
         }
 
         [Fact]
         public void AgentRegister_ReturnsOk()
         {
             //Arrange
-            // устанавливаем параметр заглушки
-            // в заглушке прописываем что в репозиторий прилетит CpuMetric объект
-            mock.Setup(agentList => agentList.agents.Add(It.IsAny<AgentInfo>())).Verifiable();
             Random random = new Random();
             UriBuilder uriBuilder = new UriBuilder();
             AgentInfo agentInfo = new AgentInfo(random.Next(maxAgentsCount), uriBuilder.Uri);
@@ -41,7 +38,7 @@ namespace MetricsManagerTests
             // Assert
             // проверяем заглушку на то, что пока работал контроллер
             // действительно вызвался метод Create репозитория с нужным типом объекта в параметре
-            mock.Verify(agentList => agentList.agents.Add(It.IsAny<AgentInfo>()), Times.AtMostOnce());
+            _ = Assert.IsAssignableFrom<IActionResult>(result);
         }
 
         [Fact]

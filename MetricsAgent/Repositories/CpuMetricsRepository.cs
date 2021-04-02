@@ -4,7 +4,11 @@ using System.Data.SQLite;
 
 namespace MetricsAgent.DAL
 {
-    public class CpuMetricsRepository : IRepository<CpuMetric>
+    public interface ICpuMetricsRepository : IRepository<CpuMetric>
+    {
+
+    }
+    public class CpuMetricsRepository : ICpuMetricsRepository
     {
         // наше соединение с базой данных
         private SQLiteConnection _connection;
@@ -59,7 +63,7 @@ namespace MetricsAgent.DAL
             cmd.ExecuteNonQuery();
         }
 
-        public IList<CpuMetric> GetAll()
+        public List<CpuMetric> GetAll()
         {
             using var cmd = new SQLiteCommand(_connection);
 

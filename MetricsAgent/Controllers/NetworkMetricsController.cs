@@ -10,10 +10,12 @@ namespace MetricsManager.Controllers
     [ApiController]
     public class NetworkMetricsController : ControllerBase
     {
-        private NetworkMetricsRepository _repository;
+        private INetworkMetricsRepository _repository;
+
         private readonly ILogger<NetworkMetricsController> _logger;
-        public NetworkMetricsController(ILogger<NetworkMetricsController> logger)
+        public NetworkMetricsController(ILogger<NetworkMetricsController> logger, INetworkMetricsRepository repository)
         {
+            _repository = repository;
             _logger = logger;
             _logger.LogDebug("Nlog встроен в NetworkMetricsController");
         }

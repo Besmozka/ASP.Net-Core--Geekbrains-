@@ -4,7 +4,11 @@ using System.Data.SQLite;
 
 namespace MetricsAgent.DAL
 {
-    public class DotNetRepository : IRepository<DotNetMetric>
+    public interface IDotNetRepository : IRepository<DotNetMetric> 
+    { 
+
+    }
+    public class DotNetRepository : IDotNetRepository
     {
         private SQLiteConnection _connection;
 
@@ -48,7 +52,7 @@ namespace MetricsAgent.DAL
             cmd.ExecuteNonQuery();
         }
 
-        public IList<DotNetMetric> GetAll()
+        public List<DotNetMetric> GetAll()
         {
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = "SELECT * FROM cpumetrics";

@@ -1,26 +1,35 @@
+using MetricsAgent;
+using MetricsAgent.DAL;
 using MetricsManager.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Moq;
 using System;
 using Xunit;
 
-namespace MetricsManagerTests
+namespace MetricsAgentTests
 {
     public class DotNetControllerUnitTests
     {
         private DotNetMetricsController controller;
 
-        private ILogger<DotNetMetricsController> logger;
+        private Mock<ILogger<DotNetMetricsController>> mockLogger;
+
+        private Mock<IDotNetRepository> mockRepository;
 
         public DotNetControllerUnitTests()
         {
-            controller = new DotNetMetricsController(logger);
+            mockLogger = new Mock<ILogger<DotNetMetricsController>>();
+            mockRepository = new Mock<IDotNetRepository>();
+            controller = new DotNetMetricsController(mockLogger.Object, mockRepository.Object);
         }
 
         [Fact]
         public void GetErrorsTimeInterval_ReturnsOk()
         {
             //ArrangeRandom 
+            mockRepository.Setup(repository => repository.Create(It.IsAny<DotNetMetric>())).Verifiable();
+
             Random random = new Random();
             var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50));
             var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50, 100));
@@ -28,7 +37,9 @@ namespace MetricsManagerTests
             //Act
             var result = controller.GetDotNetErrorsTimeInterval(fromTime, toTime);
 
+
             // Assert
+            mockRepository.Verify(repository => repository.Create(It.IsAny<DotNetMetric>()), Times.Exactly(2));
             _ = Assert.IsAssignableFrom<IActionResult>(result);
         }
     }
