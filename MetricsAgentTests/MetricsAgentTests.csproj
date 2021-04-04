@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Enums\EnumsLibrary.csproj" />
+    <ProjectReference Include="..\Enums\Library.csproj" />
     <ProjectReference Include="..\MetricsAgent\MetricsAgent.csproj" />
   </ItemGroup>
 

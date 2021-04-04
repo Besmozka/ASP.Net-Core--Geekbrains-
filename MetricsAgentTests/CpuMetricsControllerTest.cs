@@ -1,3 +1,4 @@
+using AutoMapper;
 using EnumsLibrary;
 using MetricsAgent;
 using MetricsAgent.Controllers;
@@ -19,15 +20,17 @@ namespace MetricsAgentTests
 
         private Mock<ICpuMetricsRepository> mockRepository;
 
+        private Mock<IMapper> mockMapper;
         public CpuMetricsControllerUnitTests()
         {
             mockLogger = new Mock<ILogger<CpuMetricsController>>();
             mockRepository = new Mock<ICpuMetricsRepository>();
-            controller = new CpuMetricsController(mockLogger.Object, mockRepository.Object);
+            mockMapper = new Mock<IMapper>();
+            controller = new CpuMetricsController(mockLogger.Object, mockRepository.Object, mockMapper.Object);
         }
 
         [Fact]
-        public void Call_AllMethods_From_Repository()
+        public void Call_AllMethods_From_Controller()
         {
             // устанавливаем параметр заглушки
             // в заглушке прописываем что в репозиторий прилетит CpuMetric объект

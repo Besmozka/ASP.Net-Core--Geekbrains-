@@ -1,3 +1,4 @@
+using AutoMapper;
 using MetricsAgent.DAL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,7 +12,7 @@ namespace MetricsAgent
 {
     public class Startup
     {
-        private int tableSize = 100;
+        private int tableSize = 10;
         private Random random = new Random();
         public Startup(IConfiguration configuration)
         {
@@ -24,13 +25,20 @@ namespace MetricsAgent
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            ConfigureSqlLiteConnection(services);
-            services.AddScoped<CpuMetricsRepository>();
+            ConfigureSqlLiteConnection(services); 
+            var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfile()));
+            var mapper = mapperConfiguration.CreateMapper();
+            services.AddSingleton(mapper);
+            services.AddScoped<ICpuMetricsRepository, CpuMetricsRepository>();
+            services.AddScoped<IDotNetMetricsRepository, DotNetMetricsRepository>();
+            services.AddScoped<IHddMetricsRepository, HddMetricsRepository>();
+            services.AddScoped<INetworkMetricsRepository, NetworkMetricsRepository>();
+            services.AddScoped<IRamMetricsRepository, RamMetricsRepository>();
         }
 
         private void ConfigureSqlLiteConnection(IServiceCollection services)
         {
-            string connectionString = "Data Source=:memory:";
+            string connectionString = "Data Source=metrics.db";
             var connection = new SQLiteConnection(connectionString);
             connection.Open();
             PrepareSchema(connection);
