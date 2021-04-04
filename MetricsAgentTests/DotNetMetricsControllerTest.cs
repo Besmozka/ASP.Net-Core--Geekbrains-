@@ -15,12 +15,12 @@ namespace MetricsAgentTests
 
         private Mock<ILogger<DotNetMetricsController>> mockLogger;
 
-        private Mock<IDotNetRepository> mockRepository;
+        private Mock<IDotNetMetricsRepository> mockRepository;
 
         public DotNetControllerUnitTests()
         {
             mockLogger = new Mock<ILogger<DotNetMetricsController>>();
-            mockRepository = new Mock<IDotNetRepository>();
+            mockRepository = new Mock<IDotNetMetricsRepository>();
             controller = new DotNetMetricsController(mockLogger.Object, mockRepository.Object);
         }
 

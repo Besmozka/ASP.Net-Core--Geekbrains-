@@ -4,15 +4,15 @@ using System.Data.SQLite;
 
 namespace MetricsAgent.DAL
 {
-    public interface IDotNetRepository : IRepository<DotNetMetric> 
+    public interface IDotNetMetricsRepository : IRepository<DotNetMetric> 
     { 
 
     }
-    public class DotNetRepository : IDotNetRepository
+    public class DotNetMetricsRepository : IDotNetMetricsRepository
     {
         private SQLiteConnection _connection;
 
-        public DotNetRepository(SQLiteConnection connection)
+        public DotNetMetricsRepository(SQLiteConnection connection)
         {
             _connection = connection;
         }
