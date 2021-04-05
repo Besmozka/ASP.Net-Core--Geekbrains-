@@ -1,6 +1,8 @@
+using EnumsLibrary;
 using MetricsManager.Controllers;
-using MetricsManager.Enums;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Moq;
 using System;
 using Xunit;
 
@@ -8,10 +10,13 @@ namespace MetricsManagerTests
 {
     public class HddControllerUnitTests
     {
-        private HddMetricsController controller;
+        private HddMetricsController _controller;
+
+        private Mock<ILogger<HddMetricsController>> _mockLogger;
         public HddControllerUnitTests()
         {
-            controller = new HddMetricsController();
+            _mockLogger = new Mock<ILogger<HddMetricsController>>();
+            _controller = new HddMetricsController(_mockLogger.Object);
         }
 
         [Fact]
@@ -23,7 +28,7 @@ namespace MetricsManagerTests
             var toTime = TimeSpan.FromSeconds(100);
 
             //Act
-            var result = controller.GetHddMetricsFromAgent(agentId, fromTime, toTime);
+            var result = _controller.GetHddMetricsFromAgent(agentId, fromTime, toTime);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -40,7 +45,7 @@ namespace MetricsManagerTests
             Percentile percentile = (Percentile)random.Next(0, 4);
 
             //Act
-            var result = controller.GetHddMetricsByPercentileFromAgent(agentId, fromTime, toTime, percentile);
+            var result = _controller.GetHddMetricsByPercentileFromAgent(agentId, fromTime, toTime, percentile);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -53,7 +58,7 @@ namespace MetricsManagerTests
             var toTime = TimeSpan.FromSeconds(100);
 
             //Act
-            var result = controller.GetHddMetricsFromAllCluster(fromTime, toTime);
+            var result = _controller.GetHddMetricsFromAllCluster(fromTime, toTime);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -69,7 +74,7 @@ namespace MetricsManagerTests
             Percentile percentile = (Percentile)random.Next(0, 4);
 
             //Act
-            var result = controller.GetHddMetricsByPercentileFromAllCluster(fromTime, toTime, percentile);
+            var result = _controller.GetHddMetricsByPercentileFromAllCluster(fromTime, toTime, percentile);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);

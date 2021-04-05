@@ -1,6 +1,8 @@
+using EnumsLibrary;
 using MetricsManager.Controllers;
-using MetricsManager.Enums;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Moq;
 using System;
 using Xunit;
 
@@ -8,11 +10,13 @@ namespace MetricsManagerTests
 {
     public class CpuControllerUnitTests
     {
-        private CpuMetricsController controller;
+        private CpuMetricsController _controller;
 
+        private Mock<ILogger<CpuMetricsController>> _mockLogger;
         public CpuControllerUnitTests()
         {
-            controller = new CpuMetricsController();
+            _mockLogger = new Mock<ILogger<CpuMetricsController>>();
+            _controller = new CpuMetricsController(_mockLogger.Object);
         }
 
         [Fact]
@@ -24,7 +28,7 @@ namespace MetricsManagerTests
             var toTime = TimeSpan.FromSeconds(100);
 
             //Act
-            var result = controller.GetCpuMetricsFromAgent(agentId, fromTime, toTime);
+            var result = _controller.GetCpuMetricsFromAgent(agentId, fromTime, toTime);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -41,7 +45,7 @@ namespace MetricsManagerTests
             Percentile percentile = (Percentile)random.Next(0, 4);
 
             //Act
-            var result = controller.GetCpuMetricsByPercentileFromAgent(agentId, fromTime, toTime, percentile);
+            var result = _controller.GetCpuMetricsByPercentileFromAgent(agentId, fromTime, toTime, percentile);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -55,7 +59,7 @@ namespace MetricsManagerTests
             var toTime = TimeSpan.FromSeconds(100);
 
             //Act
-            var result = controller.GetCpuMetricsFromAllCluster(fromTime, toTime);
+            var result = _controller.GetCpuMetricsFromAllCluster(fromTime, toTime);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -71,7 +75,7 @@ namespace MetricsManagerTests
             Percentile percentile = (Percentile)random.Next(0, 4);
 
             //Act
-            var result = controller.GetCpuMetricsByPercentileFromAllCluster(fromTime, toTime, percentile);
+            var result = _controller.GetCpuMetricsByPercentileFromAllCluster(fromTime, toTime, percentile);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);

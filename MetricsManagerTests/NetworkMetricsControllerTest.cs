@@ -1,5 +1,7 @@
 using MetricsManager.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Moq;
 using System;
 using Xunit;
 
@@ -7,11 +9,13 @@ namespace MetricsManagerTests
 {
     public class NetworkControllerUnitTests
     {
-        private NetworkMetricsController controller;
+        private NetworkMetricsController _controller;
 
+        private Mock<ILogger<NetworkMetricsController>> _mockLogger;
         public NetworkControllerUnitTests()
         {
-            controller = new NetworkMetricsController();
+            _mockLogger = new Mock<ILogger<NetworkMetricsController>>();
+            _controller = new NetworkMetricsController(_mockLogger.Object);
         }
 
         [Fact]
@@ -23,7 +27,7 @@ namespace MetricsManagerTests
             var toTime = TimeSpan.FromSeconds(100);
 
             //Act
-            var result = controller.GetNetworkMetricsFromAgent(agentId, fromTime, toTime);
+            var result = _controller.GetNetworkMetricsFromAgent(agentId, fromTime, toTime);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);

@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MetricsAgent;
+using MetricsAgent.DAL;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 
 namespace MetricsManager.Controllers
 {
@@ -7,10 +11,31 @@ namespace MetricsManager.Controllers
     [ApiController]
     public class NetworkMetricsController : ControllerBase
     {
-        [HttpGet("network/from/{fromTime}/to/{toTime}/")]
-        public IActionResult GetNetworkMetricsTimeInterval([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
+        private INetworkMetricsRepository _repository;
+
+        private readonly ILogger<NetworkMetricsController> _logger;
+        public NetworkMetricsController(ILogger<NetworkMetricsController> logger, INetworkMetricsRepository repository)
         {
-            return Ok();
+            _repository = repository;
+            _logger = logger;
+            _logger.LogDebug("Nlog встроен в NetworkMetricsController");
+        }
+
+        [HttpGet("network/from/{fromTime}/to/{toTime}/")]
+        public IActionResult GetNetworkMetricsTimeInterval([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
+        {
+            _logger.LogInformation($"GetNetworkMetricsTimeInterval - From time: {fromTime}; To time: {toTime}");
+            List<NetworkMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
+
+            return Ok(metrics);
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetAll()
+        {
+            _logger.LogInformation("Get all");
+            List<NetworkMetric> metrics = _repository.GetAll();
+            return Ok(metrics);
         }
     }
 }
