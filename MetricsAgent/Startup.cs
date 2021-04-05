@@ -11,7 +11,7 @@ namespace MetricsAgent
 {
     public class Startup
     {
-        private int tableSize = 100;
+        private int tableSize = 10;
         private Random random = new Random();
         public Startup(IConfiguration configuration)
         {

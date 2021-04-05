@@ -98,5 +98,30 @@ namespace MetricsAgent.DAL
                 }
             }
         }
+
+        public List<DotNetMetric> GetByTimePeriod(DateTimeOffset fromTime, DateTimeOffset toTime)
+        {
+            List<DotNetMetric> resultList = new List<DotNetMetric>();
+
+            using var cmd = new SQLiteCommand(_connection);
+            cmd.CommandText = "SELECT * FROM cpumetrics WHERE Time >= @fromTime AND Time <= @toTime";
+            cmd.Parameters.AddWithValue("@fromTime", fromTime.ToUnixTimeSeconds());
+            cmd.Parameters.AddWithValue("@toTime", toTime.ToUnixTimeSeconds());
+
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    resultList.Add(new DotNetMetric
+                    {
+                        Id = reader.GetInt32(0),
+                        Value = reader.GetInt32(1),
+                        Time = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt32(2))
+                    });
+                }
+            }
+
+            return resultList;
+        }
     }
 }

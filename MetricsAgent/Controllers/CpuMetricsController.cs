@@ -3,7 +3,7 @@ using MetricsAgent.DAL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-
+using System.Collections.Generic;
 
 namespace MetricsAgent.Controllers
 {
@@ -26,12 +26,9 @@ namespace MetricsAgent.Controllers
         public IActionResult GetCpuMetricsTimeInterval([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
             _logger.LogInformation($"GetCpuMetricsTimeInterval - From time: {fromTime}; To time: {toTime}");
-            CpuMetric cpuMetric = new CpuMetric();
-            cpuMetric.Time = fromTime;
-            _repository.Create(cpuMetric);
-            cpuMetric.Time = toTime;
-            _repository.Create(cpuMetric);
-            return Ok();
+            List<CpuMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
+
+            return Ok(metrics);
         }
 
         [HttpGet("from/{fromTime}/to/{toTime}/percentiles/{percentile}")]
@@ -39,12 +36,17 @@ namespace MetricsAgent.Controllers
             [FromRoute] Percentile percentile)
         {
             _logger.LogInformation($"GetCpuMetricsByPercentileTimeInterval - From time: {fromTime}; To time: {toTime}; Percentile: {percentile}");
-            CpuMetric cpuMetric = new CpuMetric();
-            cpuMetric.Time = fromTime;
-            _repository.Create(cpuMetric);
-            cpuMetric.Time = toTime;
-            _repository.Create(cpuMetric);
+            List<CpuMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
+
             return Ok();
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetAll()
+        {
+            _logger.LogInformation("Get all");
+            List<CpuMetric> metrics = _repository.GetAll();
+            return Ok(metrics);
         }
     }
 }

@@ -3,6 +3,7 @@ using MetricsAgent.DAL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 
 namespace MetricsManager.Controllers
 {
@@ -24,12 +25,17 @@ namespace MetricsManager.Controllers
         public IActionResult GetNetworkMetricsTimeInterval([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
             _logger.LogInformation($"GetNetworkMetricsTimeInterval - From time: {fromTime}; To time: {toTime}");
-            NetworkMetric networkMetric = new NetworkMetric();
-            networkMetric.Time = fromTime;
-            _repository.Create(networkMetric);
-            networkMetric.Time = toTime;
-            _repository.Create(networkMetric);
-            return Ok();
+            List<NetworkMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
+
+            return Ok(metrics);
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetAll()
+        {
+            _logger.LogInformation("Get all");
+            List<NetworkMetric> metrics = _repository.GetAll();
+            return Ok(metrics);
         }
     }
 }

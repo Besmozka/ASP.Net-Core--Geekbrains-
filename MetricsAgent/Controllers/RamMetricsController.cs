@@ -2,6 +2,7 @@
 using MetricsAgent.DAL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace MetricsManager.Controllers
 {
@@ -23,10 +24,15 @@ namespace MetricsManager.Controllers
         public IActionResult GetRamAvailableSize()
         {
             _logger.LogInformation($"GetRamAvailableSize - Available:");
-            RamMetric ramMetric = new RamMetric();
-            ramMetric.Value = 0;
-            _repository.Create(ramMetric);
             return Ok();
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetAll()
+        {
+            _logger.LogInformation("Get all");
+            List<RamMetric> metrics = _repository.GetAll();
+            return Ok(metrics);
         }
     }
 }

@@ -2,6 +2,7 @@
 using MetricsAgent.DAL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace MetricsManager.Controllers
 {
@@ -23,10 +24,15 @@ namespace MetricsManager.Controllers
         public IActionResult GetHddSizeLeft()
         {
             _logger.LogInformation($"GetHddSizeLeft - Left:");
-            HddMetric hddMetric = new HddMetric();
-            hddMetric.Value = 0;
-            _repository.Create(hddMetric);
             return Ok();
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetAll()
+        {
+            _logger.LogInformation("Get all");
+            List<HddMetric> metrics = _repository.GetAll();
+            return Ok(metrics);
         }
     }
 }
