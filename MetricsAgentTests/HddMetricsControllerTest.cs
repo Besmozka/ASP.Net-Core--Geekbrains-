@@ -11,27 +11,27 @@ namespace MetricsAgentTests
 {
     public class HddControllerUnitTests
     {
-        private HddMetricsController controller;
+        private HddMetricsController _controller;
 
-        private Mock<ILogger<HddMetricsController>> mockLogger;
-        private Mock<IHddMetricsRepository> mockRepository;
+        private Mock<ILogger<HddMetricsController>> _mockLogger;
+        private Mock<IHddMetricsRepository> _mockRepository;
         public HddControllerUnitTests()
         {
-            mockLogger = new Mock<ILogger<HddMetricsController>>();
-            mockRepository = new Mock<IHddMetricsRepository>();
-            controller = new HddMetricsController(mockLogger.Object, mockRepository.Object);
+            _mockLogger = new Mock<ILogger<HddMetricsController>>();
+            _mockRepository = new Mock<IHddMetricsRepository>();
+            _controller = new HddMetricsController(_mockLogger.Object, _mockRepository.Object);
         }
 
         [Fact]
         public void GetSizeLeft_ReturnsOk()
         {
             //Arrange
-            mockRepository.Setup(repository => repository.Create(It.IsAny<HddMetric>())).Verifiable();
+            _mockRepository.Setup(repository => repository.Create(It.IsAny<HddMetric>())).Verifiable();
             //Act
-            var result = controller.GetHddSizeLeft();
+            var result = _controller.GetHddSizeLeft();
 
             // Assert
-            mockRepository.Verify(repository => repository.Create(It.IsAny<HddMetric>()), Times.Once());
+            _mockRepository.Verify(repository => repository.Create(It.IsAny<HddMetric>()), Times.Once());
             _ = Assert.IsAssignableFrom<IActionResult>(result);
         }
     }

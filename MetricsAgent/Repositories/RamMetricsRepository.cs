@@ -10,16 +10,16 @@ namespace MetricsAgent.DAL
     }
     public class RamMetricsRepository : IRamMetricsRepository
     {
-        private SQLiteConnection connection;
+        private SQLiteConnection _connection;
 
         public RamMetricsRepository(SQLiteConnection connection)
         {
-            this.connection = connection;
+            _connection = connection;
         }
 
         public void Create(RamMetric item)
         {
-            using var cmd = new SQLiteCommand(connection);
+            using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = "INSERT INTO cpumetrics(value, time) VALUES(@value, @time)";
 
             cmd.Parameters.AddWithValue("@value", item.Value);
@@ -32,7 +32,7 @@ namespace MetricsAgent.DAL
 
         public void Delete(int id)
         {
-            using var cmd = new SQLiteCommand(connection);
+            using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = "DELETE FROM cpumetrics WHERE id=@id";
 
             cmd.Parameters.AddWithValue("@id", id);
@@ -42,7 +42,7 @@ namespace MetricsAgent.DAL
 
         public void Update(RamMetric item)
         {
-            using var cmd = new SQLiteCommand(connection);
+            using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = "UPDATE cpumetrics SET value = @value, time = @time WHERE id=@id;";
             cmd.Parameters.AddWithValue("@id", item.Id);
             cmd.Parameters.AddWithValue("@value", item.Value);
@@ -54,7 +54,7 @@ namespace MetricsAgent.DAL
 
         public List<RamMetric> GetAll()
         {
-            using var cmd = new SQLiteCommand(connection);
+            using var cmd = new SQLiteCommand(_connection);
 
             cmd.CommandText = "SELECT * FROM cpumetrics";
 
@@ -78,7 +78,7 @@ namespace MetricsAgent.DAL
 
         public RamMetric GetById(int id)
         {
-            using var cmd = new SQLiteCommand(connection);
+            using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = "SELECT * FROM cpumetrics WHERE id=@id";
             cmd.Parameters.AddWithValue("@id", id);
             using (SQLiteDataReader reader = cmd.ExecuteReader())

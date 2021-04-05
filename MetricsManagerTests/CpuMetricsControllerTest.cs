@@ -10,13 +10,13 @@ namespace MetricsManagerTests
 {
     public class CpuControllerUnitTests
     {
-        private CpuMetricsController controller;
+        private CpuMetricsController _controller;
 
-        private Mock<ILogger<CpuMetricsController>> mockLogger;
+        private Mock<ILogger<CpuMetricsController>> _mockLogger;
         public CpuControllerUnitTests()
         {
-            mockLogger = new Mock<ILogger<CpuMetricsController>>();
-            controller = new CpuMetricsController(mockLogger.Object);
+            _mockLogger = new Mock<ILogger<CpuMetricsController>>();
+            _controller = new CpuMetricsController(_mockLogger.Object);
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace MetricsManagerTests
             var toTime = TimeSpan.FromSeconds(100);
 
             //Act
-            var result = controller.GetCpuMetricsFromAgent(agentId, fromTime, toTime);
+            var result = _controller.GetCpuMetricsFromAgent(agentId, fromTime, toTime);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -45,7 +45,7 @@ namespace MetricsManagerTests
             Percentile percentile = (Percentile)random.Next(0, 4);
 
             //Act
-            var result = controller.GetCpuMetricsByPercentileFromAgent(agentId, fromTime, toTime, percentile);
+            var result = _controller.GetCpuMetricsByPercentileFromAgent(agentId, fromTime, toTime, percentile);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -59,7 +59,7 @@ namespace MetricsManagerTests
             var toTime = TimeSpan.FromSeconds(100);
 
             //Act
-            var result = controller.GetCpuMetricsFromAllCluster(fromTime, toTime);
+            var result = _controller.GetCpuMetricsFromAllCluster(fromTime, toTime);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -75,7 +75,7 @@ namespace MetricsManagerTests
             Percentile percentile = (Percentile)random.Next(0, 4);
 
             //Act
-            var result = controller.GetCpuMetricsByPercentileFromAllCluster(fromTime, toTime, percentile);
+            var result = _controller.GetCpuMetricsByPercentileFromAllCluster(fromTime, toTime, percentile);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);

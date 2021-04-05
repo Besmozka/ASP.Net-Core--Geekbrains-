@@ -9,13 +9,13 @@ namespace MetricsManagerTests
 {
     public class DotNetControllerUnitTests
     {
-        private DotNetMetricsController controller;
+        private DotNetMetricsController _controller;
 
-        private Mock<ILogger<DotNetMetricsController>> mockLogger;
+        private Mock<ILogger<DotNetMetricsController>> _mockLogger;
         public DotNetControllerUnitTests()
         {
-            mockLogger = new Mock<ILogger<DotNetMetricsController>>();
-            controller = new DotNetMetricsController(mockLogger.Object);
+            _mockLogger = new Mock<ILogger<DotNetMetricsController>>();
+            _controller = new DotNetMetricsController(_mockLogger.Object);
         }
 
         [Fact]
@@ -27,7 +27,7 @@ namespace MetricsManagerTests
             var toTime = TimeSpan.FromSeconds(100);
 
             //Act
-            var result = controller.GetDotNetMetricsFromAgent(agentId, fromTime, toTime);
+            var result = _controller.GetDotNetMetricsFromAgent(agentId, fromTime, toTime);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
