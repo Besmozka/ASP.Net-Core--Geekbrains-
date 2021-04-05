@@ -29,11 +29,18 @@ namespace MetricsManager.Controllers
         public IActionResult GetDotNetErrorsTimeInterval([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
             _logger.LogInformation($"GetDotNetErrorsTimeInterval - From time: {fromTime}; To time: {toTime}");
-            DotNetMetricDto dotNetMetric = new DotNetMetricDto();
-            dotNetMetric.Time = fromTime;
-            _repository.Create(_mapper.Map<DotNetMetric>(dotNetMetric));
-            dotNetMetric.Time = toTime;
-            _repository.Create(_mapper.Map<DotNetMetric>(dotNetMetric));
+
+            IList<DotNetMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
+
+            var response = new AllMetricsResponse<DotNetMetricDto>()
+            {
+                Metrics = new List<DotNetMetricDto>()
+            };
+
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(_mapper.Map<DotNetMetricDto>(metric));
+            }
             return Ok();
         }
 
@@ -47,12 +54,10 @@ namespace MetricsManager.Controllers
                 Metrics = new List<DotNetMetricDto>()
             };
 
-
             foreach (var metric in metrics)
             {
                 response.Metrics.Add(_mapper.Map<DotNetMetricDto>(metric));
             }
-
             return Ok(response);
         }
     }

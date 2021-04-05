@@ -29,9 +29,7 @@ namespace MetricsManager.Controllers
         public IActionResult GetRamAvailableSize()
         {
             _logger.LogInformation($"GetRamAvailableSize - Available:");
-            RamMetricDto ramMetric = new RamMetricDto();
-            ramMetric.Value = 0;
-            _repository.Create(_mapper.Map<RamMetric>(ramMetric));
+
             return Ok();
         }
 
@@ -49,7 +47,6 @@ namespace MetricsManager.Controllers
             {
                 response.Metrics.Add(_mapper.Map<RamMetricDto>(metric));
             }
-
             return Ok(response);
         }
     }

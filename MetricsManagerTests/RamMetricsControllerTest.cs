@@ -10,14 +10,14 @@ namespace MetricsManagerTests
 {
     public class RamControllerUnitTests
     {
-        private RamMetricsController controller;
+        private RamMetricsController _controller;
 
-        private Mock<ILogger<RamMetricsController>> mockLogger;
+        private Mock<ILogger<RamMetricsController>> _mockLogger;
 
         public RamControllerUnitTests()
         {
-            mockLogger = new Mock<ILogger<RamMetricsController>>();
-            controller = new RamMetricsController(mockLogger.Object);
+            _mockLogger = new Mock<ILogger<RamMetricsController>>();
+            _controller = new RamMetricsController(_mockLogger.Object);
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace MetricsManagerTests
             var toTime = TimeSpan.FromSeconds(100);
 
             //Act
-            var result = controller.GetRamMetricsFromAgent(agentId, fromTime, toTime);
+            var result = _controller.GetRamMetricsFromAgent(agentId, fromTime, toTime);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -46,7 +46,7 @@ namespace MetricsManagerTests
             Percentile percentile = (Percentile)random.Next(0, 4);
 
             //Act
-            var result = controller.GetRamMetricsByPercentileFromAgent(agentId, fromTime, toTime, percentile);
+            var result = _controller.GetRamMetricsByPercentileFromAgent(agentId, fromTime, toTime, percentile);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -59,7 +59,7 @@ namespace MetricsManagerTests
             var toTime = TimeSpan.FromSeconds(100);
 
             //Act
-            var result = controller.GetRamMetricsFromAllCluster(fromTime, toTime);
+            var result = _controller.GetRamMetricsFromAllCluster(fromTime, toTime);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);
@@ -75,7 +75,7 @@ namespace MetricsManagerTests
             Percentile percentile = (Percentile)random.Next(0, 4);
 
             //Act
-            var result = controller.GetRamMetricsByPercentileFromAllCluster(fromTime, toTime, percentile);
+            var result = _controller.GetRamMetricsByPercentileFromAllCluster(fromTime, toTime, percentile);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);

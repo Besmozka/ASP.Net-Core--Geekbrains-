@@ -31,12 +31,18 @@ namespace MetricsAgent.Controllers
         public IActionResult GetCpuMetricsTimeInterval([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
             _logger.LogInformation($"GetCpuMetricsTimeInterval - From time: {fromTime}; To time: {toTime}");
-            CpuMetricDto cpuMetric = new CpuMetricDto();
-            cpuMetric.Time = fromTime;
-            _repository.Create(_mapper.Map<CpuMetric>(cpuMetric));
-            cpuMetric.Time = toTime;
-            _repository.Create(_mapper.Map<CpuMetric>(cpuMetric));
-            return Ok();
+            IList<CpuMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
+
+            var response = new AllMetricsResponse<CpuMetricDto>()
+            {
+                Metrics = new List<CpuMetricDto>()
+            };
+
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(_mapper.Map<CpuMetricDto>(metric));
+            }
+            return Ok(response);
         }
 
         [HttpGet("from/{fromTime}/to/{toTime}/percentiles/{percentile}")]
@@ -44,11 +50,7 @@ namespace MetricsAgent.Controllers
             [FromRoute] Percentile percentile)
         {
             _logger.LogInformation($"GetCpuMetricsByPercentileTimeInterval - From time: {fromTime}; To time: {toTime}; Percentile: {percentile}");
-            CpuMetricDto cpuMetric = new CpuMetricDto();
-            cpuMetric.Time = fromTime;
-            _repository.Create(_mapper.Map<CpuMetric>(cpuMetric));
-            cpuMetric.Time = toTime;
-            _repository.Create(_mapper.Map<CpuMetric>(cpuMetric));
+
             return Ok();
         }
 
@@ -62,14 +64,10 @@ namespace MetricsAgent.Controllers
                 Metrics = new List<CpuMetricDto>()
             };
 
-
             foreach (var metric in metrics)
             {
                 response.Metrics.Add(_mapper.Map<CpuMetricDto>(metric));
             }
-
-            var dto = new CpuMetricDto { Id = 1, Time = DateTimeOffset.FromUnixTimeSeconds(100), Value = 10 };
-
             return Ok(response);
         }
     }

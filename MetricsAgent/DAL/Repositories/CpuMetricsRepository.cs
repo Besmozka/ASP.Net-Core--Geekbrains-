@@ -70,5 +70,15 @@ namespace MetricsAgent.DAL
                     new { id = id });
             }
         }
+
+        public List<CpuMetric> GetByTimePeriod(DateTimeOffset fromTime, DateTimeOffset toTime)
+        {
+            var m = new List<CpuMetric>();
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                m.Add(connection.QuerySingle<CpuMetric>("SELECT * FROM cpumetrics WHERE Time >= @fromTime AND Time <= @toTime", new { fromTime = fromTime, toTime = toTime }));
+            }
+            return m;
+        }
     }
 }

@@ -29,9 +29,6 @@ namespace MetricsManager.Controllers
         public IActionResult GetHddSizeLeft()
         {
             _logger.LogInformation($"GetHddSizeLeft - Left:");
-            HddMetricDto hddMetric = new HddMetricDto();
-            hddMetric.Value = 0;
-            _repository.Create(_mapper.Map<HddMetric>(hddMetric));
             return Ok();
         }
 
@@ -45,12 +42,10 @@ namespace MetricsManager.Controllers
                 Metrics = new List<HddMetricDto>()
             };
 
-
             foreach (var metric in metrics)
             {
                 response.Metrics.Add(_mapper.Map<HddMetricDto>(metric));
             }
-
             return Ok(response);
         }
     }

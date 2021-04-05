@@ -70,5 +70,13 @@ namespace MetricsAgent.DAL
                     new { id = id });
             }
         }
+
+        public List<RamMetric> GetByTimePeriod(DateTimeOffset fromTime, DateTimeOffset toTime)
+        {
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                return connection.Query<RamMetric>("SELECT * FROM rammetrics WHERE Time >= @fromTime AND Time <= @toTime").ToList();
+            }
+        }
     }
 }

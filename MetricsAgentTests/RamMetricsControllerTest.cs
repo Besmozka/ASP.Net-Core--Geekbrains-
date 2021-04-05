@@ -12,31 +12,31 @@ namespace MetricsAgentTests
 {
     public class RamControllerUnitTests
     {
-        private RamMetricsController controller;
+        private RamMetricsController _controller;
 
-        private Mock<ILogger<RamMetricsController>> mockLogger;
+        private Mock<ILogger<RamMetricsController>> _mockLogger;
 
-        private Mock<IRamMetricsRepository> mockRepository;
+        private Mock<IRamMetricsRepository> _mockRepository;
 
-        private Mock<IMapper> mockMapper;
+        private Mock<IMapper> _mockMapper;
         public RamControllerUnitTests()
         {
-            mockLogger = new Mock<ILogger<RamMetricsController>>();
-            mockRepository = new Mock<IRamMetricsRepository>();
-            mockMapper = new Mock<IMapper>();
-            controller = new RamMetricsController(mockLogger.Object, mockRepository.Object, mockMapper.Object);
+            _mockLogger = new Mock<ILogger<RamMetricsController>>();
+            _mockRepository = new Mock<IRamMetricsRepository>();
+            _mockMapper = new Mock<IMapper>();
+            _controller = new RamMetricsController(_mockLogger.Object, _mockRepository.Object, _mockMapper.Object);
         }
 
         [Fact]
         public void GetAvailableSize_ReturnsOk()
         {
             //Arrange
-            mockRepository.Setup(repository => repository.Create(It.IsAny<RamMetric>())).Verifiable();
+            _mockRepository.Setup(repository => repository.Create(It.IsAny<RamMetric>())).Verifiable();
             //Act
-            var result = controller.GetRamAvailableSize();
+            var result = _controller.GetRamAvailableSize();
 
             // Assert
-            mockRepository.Verify(repository => repository.Create(It.IsAny<RamMetric>()), Times.Once());
+            _mockRepository.Verify(repository => repository.Create(It.IsAny<RamMetric>()), Times.Once());
             _ = Assert.IsAssignableFrom<IActionResult>(result);
         }
     }

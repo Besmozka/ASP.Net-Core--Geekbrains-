@@ -12,37 +12,37 @@ namespace MetricsAgentTests
 {
     public class DotNetControllerUnitTests
     {
-        private DotNetMetricsController controller;
+        private DotNetMetricsController _controller;
 
-        private Mock<ILogger<DotNetMetricsController>> mockLogger;
+        private Mock<ILogger<DotNetMetricsController>> _mockLogger;
 
-        private Mock<IDotNetMetricsRepository> mockRepository;
+        private Mock<IDotNetMetricsRepository> _mockRepository;
 
-        private Mock<IMapper> mockMapper;
+        private Mock<IMapper> _mockMapper;
         public DotNetControllerUnitTests()
         {
-            mockLogger = new Mock<ILogger<DotNetMetricsController>>();
-            mockRepository = new Mock<IDotNetMetricsRepository>();
-            mockMapper = new Mock<IMapper>();
-            controller = new DotNetMetricsController(mockLogger.Object, mockRepository.Object, mockMapper.Object);
+            _mockLogger = new Mock<ILogger<DotNetMetricsController>>();
+            _mockRepository = new Mock<IDotNetMetricsRepository>();
+            _mockMapper = new Mock<IMapper>();
+            _controller = new DotNetMetricsController(_mockLogger.Object, _mockRepository.Object, _mockMapper.Object);
         }
 
         [Fact]
         public void GetErrorsTimeInterval_ReturnsOk()
         {
             //ArrangeRandom 
-            mockRepository.Setup(repository => repository.Create(It.IsAny<DotNetMetric>())).Verifiable();
+            _mockRepository.Setup(repository => repository.Create(It.IsAny<DotNetMetric>())).Verifiable();
 
             Random random = new Random();
             var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50));
             var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50, 100));
 
             //Act
-            var result = controller.GetDotNetErrorsTimeInterval(fromTime, toTime);
+            var result = _controller.GetDotNetErrorsTimeInterval(fromTime, toTime);
 
 
             // Assert
-            mockRepository.Verify(repository => repository.Create(It.IsAny<DotNetMetric>()), Times.Exactly(2));
+            _mockRepository.Verify(repository => repository.Create(It.IsAny<DotNetMetric>()), Times.Exactly(2));
             _ = Assert.IsAssignableFrom<IActionResult>(result);
         }
     }

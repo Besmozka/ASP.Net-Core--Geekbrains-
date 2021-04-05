@@ -70,5 +70,13 @@ namespace MetricsAgent.DAL
                     new { id = id });
             }
         }
+
+        public List<NetworkMetric> GetByTimePeriod(DateTimeOffset fromTime, DateTimeOffset toTime)
+        {
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                return connection.Query<NetworkMetric>("SELECT * FROM networkmetrics WHERE Time >= @fromTime AND Time <= @toTime").ToList();
+            }
+        }
     }
 }
