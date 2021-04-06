@@ -1,13 +1,17 @@
 using AutoMapper;
 using FluentMigrator.Runner;
 using MetricsAgent.DAL;
+using MetricsAgent.Jobs;
+using MetricsAgent.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 using System;
-using System.Data.SQLite;
 
 namespace MetricsAgent
 {
@@ -49,6 +53,18 @@ namespace MetricsAgent
                     .ScanIn(typeof(Startup).Assembly).For.Migrations()
                 ).AddLogging(lb => lb
                     .AddFluentMigratorConsole());
+
+            // ДОбавляем сервисы
+            services.AddSingleton<IJobFactory, SingletonJobFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+            // добавляем нашу задачу
+            services.AddSingleton<CpuMetricJob>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(CpuMetricJob),
+                cronExpression: "0/5 * * * * ?")); // запускать каждые 5 секунд
+
+            services.AddHostedService<QuartzHostedService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
