@@ -30,26 +30,47 @@ namespace MetricsAgentTests
         }
 
         [Fact]
-        public void Call_AllMethods_From_Controller()
+        public void Call_GetCpuMetricsTimeInterval_From_Controller()
         {
             // устанавливаем параметр заглушки
             // в заглушке прописываем что в репозиторий прилетит CpuMetric объект
-            _mockRepository.Setup(repository => repository.Create(It.IsAny<CpuMetric>())).Verifiable();
+            _mockRepository.Setup(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()))
+                .Returns(new List<CpuMetric>());
 
             Random random = new Random();
             var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50));
             var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50, 100));
-            Percentile percentile = (Percentile)random.Next(1, 4);
             // выполняем действие на контроллере
             var resultGetCpuMetricsTimeInterval = _controller.GetCpuMetricsTimeInterval(fromTime, toTime);
-            var resultGetCpuMetricsByPercentileTimeInterval = _controller.GetCpuMetricsByPercentileTimeInterval(fromTime, toTime, percentile);
 
             // проверяем заглушку на то, что пока работал контроллер
             // действительно вызвался метод Create репозитория с нужным типом объекта в параметре
-            _mockRepository.Verify(repository => repository.Create(It.IsAny<CpuMetric>()), Times.Exactly(4));
+            _mockRepository.Verify(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()), Times.Once());
             _ = Assert.IsAssignableFrom<IActionResult>(resultGetCpuMetricsTimeInterval);
-            _ = Assert.IsAssignableFrom<IActionResult>(resultGetCpuMetricsByPercentileTimeInterval);
+        }
 
+        [Fact]
+        public void Call_GetCpuMetricsByPercentileTimeInterval_From_Controller()
+        {
+            Random random = new Random();
+            var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50));
+            var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50, 100));
+            Percentile percentile = (Percentile)random.Next(1, 4);
+
+            var resultGetCpuMetricsByPercentileTimeInterval = _controller.GetCpuMetricsByPercentileTimeInterval(fromTime, toTime, percentile);
+
+            _ = Assert.IsAssignableFrom<IActionResult>(resultGetCpuMetricsByPercentileTimeInterval);
+        }
+
+        [Fact]
+        public void Call_GetAll_From_Controller()
+        {
+            _mockRepository.Setup(repository => repository.GetAll()).Returns(new List<CpuMetric>());
+
+            var resultGetAll = _controller.GetAll();
+
+            _mockRepository.Verify(repository => repository.GetAll(), Times.Once());
+            _ = Assert.IsAssignableFrom<IActionResult>(resultGetAll);
         }
     }
 }

@@ -36,6 +36,8 @@ namespace MetricsManager.Controllers
         [HttpGet("all")]
         public IActionResult GetAll()
         {
+            _logger.LogInformation($"GetAll");
+
             IList<RamMetric> metrics = _repository.GetAll();
 
             var response = new AllMetricsResponse<RamMetricDto>()

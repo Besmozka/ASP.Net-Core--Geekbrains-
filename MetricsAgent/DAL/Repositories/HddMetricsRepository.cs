@@ -15,7 +15,7 @@ namespace MetricsAgent.DAL
         {
             SqlMapper.AddTypeHandler(new DateTimeOffsetHandler());
         }
-        public void Create(HddMetric item)
+        public void Create(RamMetric item)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
@@ -40,7 +40,7 @@ namespace MetricsAgent.DAL
             }
         }
 
-        public void Update(HddMetric item)
+        public void Update(RamMetric item)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
@@ -54,28 +54,29 @@ namespace MetricsAgent.DAL
             }
         }
 
-        public List<HddMetric> GetAll()
+        public List<RamMetric> GetAll()
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.Query<HddMetric>("SELECT Id, Time, Value FROM hddmetrics").ToList();
+                return connection.Query<RamMetric>("SELECT Id, Time, Value FROM hddmetrics").ToList();
             }
         }
 
-        public HddMetric GetById(int id)
+        public RamMetric GetById(int id)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.QuerySingle<HddMetric>("SELECT Id, Time, Value FROM hddmetrics WHERE id=@id",
+                return connection.QuerySingle<RamMetric>("SELECT Id, Time, Value FROM hddmetrics WHERE id=@id",
                     new { id = id });
             }
         }
 
-        public List<HddMetric> GetByTimePeriod(DateTimeOffset fromTime, DateTimeOffset toTime)
+        public List<RamMetric> GetByTimePeriod(DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.Query<HddMetric>("SELECT * FROM hddmetrics WHERE Time >= @fromTime AND Time <= @toTime").ToList();
+                return connection.Query<RamMetric>("SELECT * FROM hddmetrics WHERE Time>=@fromTime AND Time<=@toTime",
+                    new { fromTime = fromTime.ToUnixTimeSeconds(), toTime = toTime.ToUnixTimeSeconds() }).ToList();
             }
         }
     }

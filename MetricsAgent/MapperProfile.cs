@@ -16,8 +16,8 @@ namespace MetricsAgent
             CreateMap<DotNetMetric, DotNetMetricDto>();
             CreateMap<DotNetMetricDto, DotNetMetric>();
 
-            CreateMap<HddMetric, HddMetricDto>();
-            CreateMap<HddMetricDto, HddMetric>();
+            CreateMap<RamMetric, HddMetricDto>();
+            CreateMap<HddMetricDto, RamMetric>();
 
             CreateMap<NetworkMetric, NetworkMetricDto>();
             CreateMap<NetworkMetricDto, NetworkMetric>();

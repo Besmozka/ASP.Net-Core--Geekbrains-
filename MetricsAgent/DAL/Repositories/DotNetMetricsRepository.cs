@@ -75,7 +75,8 @@ namespace MetricsAgent.DAL
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.Query<DotNetMetric>("SELECT * FROM dotnetmetrics WHERE Time >= @fromTime AND Time <= @toTime").ToList();
+                return connection.Query<DotNetMetric>("SELECT * FROM dotnetmetrics WHERE Time>=@fromTime AND Time<=@toTime",
+                    new { fromTime = fromTime.ToUnixTimeSeconds(), toTime = toTime.ToUnixTimeSeconds() }).ToList();
             }
         }
     }

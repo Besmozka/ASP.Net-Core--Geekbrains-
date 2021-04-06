@@ -31,7 +31,7 @@ namespace MetricsAgent.Controllers
         public IActionResult GetCpuMetricsTimeInterval([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
             _logger.LogInformation($"GetCpuMetricsTimeInterval - From time: {fromTime}; To time: {toTime}");
-            IList<CpuMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
+            List<CpuMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
 
             var response = new AllMetricsResponse<CpuMetricDto>()
             {
@@ -57,7 +57,9 @@ namespace MetricsAgent.Controllers
         [HttpGet("all")]
         public IActionResult GetAll()
         {
-            IList<CpuMetric> metrics = _repository.GetAll();
+            _logger.LogInformation($"GetAll");
+
+            List<CpuMetric> metrics = _repository.GetAll();
 
             var response = new AllMetricsResponse<CpuMetricDto>()
             {

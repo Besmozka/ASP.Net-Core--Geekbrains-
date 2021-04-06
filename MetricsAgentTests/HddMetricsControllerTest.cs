@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace MetricsAgentTests
@@ -30,14 +31,20 @@ namespace MetricsAgentTests
         [Fact]
         public void GetSizeLeft_ReturnsOk()
         {
-            //Arrange
-            _mockRepository.Setup(repository => repository.Create(It.IsAny<HddMetric>())).Verifiable();
-            //Act
             var result = _controller.GetHddSizeLeft();
 
-            // Assert
-            _mockRepository.Verify(repository => repository.Create(It.IsAny<HddMetric>()), Times.Once());
             _ = Assert.IsAssignableFrom<IActionResult>(result);
+        }
+
+        [Fact]
+        public void Call_GetAll_From_Controller()
+        {
+            _mockRepository.Setup(repository => repository.GetAll()).Returns(new List<RamMetric>()); ;
+
+            var resultGetAll = _controller.GetAll();
+
+            _mockRepository.Verify(repository => repository.GetAll(), Times.Once());
+            _ = Assert.IsAssignableFrom<IActionResult>(resultGetAll);
         }
     }
 }

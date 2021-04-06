@@ -47,6 +47,8 @@ namespace MetricsManager.Controllers
         [HttpGet("all")]
         public IActionResult GetAll()
         {
+            _logger.LogInformation($"GetAll");
+
             IList<DotNetMetric> metrics = _repository.GetAll();
 
             var response = new AllMetricsResponse<DotNetMetricDto>()

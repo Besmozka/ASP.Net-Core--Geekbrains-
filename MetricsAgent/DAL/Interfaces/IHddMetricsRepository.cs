@@ -1,6 +1,6 @@
 ﻿namespace MetricsAgent.DAL
 {
-    public interface IHddMetricsRepository: IRepository<HddMetric>
+    public interface IHddMetricsRepository: IRepository<RamMetric>
     {
 
     }    
