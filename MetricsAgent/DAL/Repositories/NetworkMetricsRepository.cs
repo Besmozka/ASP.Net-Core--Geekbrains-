@@ -28,49 +28,6 @@ namespace MetricsAgent.DAL
             }
         }
 
-        public void Delete(int id)
-        {
-            using (var connection = new SQLiteConnection(ConnectionString))
-            {
-                connection.Execute("DELETE FROM networkmetrics WHERE id=@id",
-                    new
-                    {
-                        id = id
-                    });
-            }
-        }
-
-        public void Update(NetworkMetric item)
-        {
-            using (var connection = new SQLiteConnection(ConnectionString))
-            {
-                connection.Execute("UPDATE networkmetrics SET value = @value, time = @time WHERE id=@id",
-                    new
-                    {
-                        value = item.Value,
-                        time = item.Time.ToUnixTimeSeconds(),
-                        id = item.Id
-                    });
-            }
-        }
-
-        public List<NetworkMetric> GetAll()
-        {
-            using (var connection = new SQLiteConnection(ConnectionString))
-            {
-                return connection.Query<NetworkMetric>("SELECT Id, Time, Value FROM networkmetrics").ToList();
-            }
-        }
-
-        public NetworkMetric GetById(int id)
-        {
-            using (var connection = new SQLiteConnection(ConnectionString))
-            {
-                return connection.QuerySingle<NetworkMetric>("SELECT Id, Time, Value FROM networkmetrics WHERE id=@id",
-                    new { id = id });
-            }
-        }
-
         public List<NetworkMetric> GetByTimePeriod(DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using (var connection = new SQLiteConnection(ConnectionString))

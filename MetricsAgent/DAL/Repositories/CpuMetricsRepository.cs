@@ -28,49 +28,6 @@ namespace MetricsAgent.DAL
             }
         }
 
-        public void Delete(int id)
-        {
-            using (var connection = new SQLiteConnection(ConnectionString))
-            {
-                connection.Execute("DELETE FROM cpumetrics WHERE id=@id",
-                    new
-                    {
-                        id = id
-                    });
-            }
-        }
-
-        public void Update(CpuMetric item)
-        {
-            using (var connection = new SQLiteConnection(ConnectionString))
-            {
-                connection.Execute("UPDATE cpumetrics SET value = @value, time = @time WHERE id=@id",
-                    new
-                    {
-                        value = item.Value,
-                        time = item.Time.ToUnixTimeSeconds(),
-                        id = item.Id
-                    });
-            }
-        }
-
-        public List<CpuMetric> GetAll()
-        {
-            using (var connection = new SQLiteConnection(ConnectionString))
-            {
-                return connection.Query<CpuMetric>("SELECT Id, Time, Value FROM cpumetrics").ToList();
-            }
-        }
-
-        public CpuMetric GetById(int id)
-        {
-            using (var connection = new SQLiteConnection(ConnectionString))
-            {
-                return connection.QuerySingle<CpuMetric>("SELECT Id, Time, Value FROM cpumetrics WHERE id=@id",
-                    new { id = id });
-            }
-        }
-
         public List<CpuMetric> GetByTimePeriod(DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using (var connection = new SQLiteConnection(ConnectionString))

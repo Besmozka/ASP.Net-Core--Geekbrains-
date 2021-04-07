@@ -61,14 +61,30 @@ namespace MetricsAgent
             services.AddSingleton<CpuMetricJob>();
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(CpuMetricJob),
-                cronExpression: "0/5 * * * * ?")); // запускать каждые 5 секунд
+                cronExpression: "0/2 * * * * ?")); // запускать каждые 2 секунды
+            //services.AddSingleton<DotNetMetricJob>();
+            //services.AddSingleton(new JobSchedule(
+            //    jobType: typeof(DotNetMetricJob),
+            //    cronExpression: "0/2 * * * * ?"));
+            services.AddSingleton<HddMetricJob>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(HddMetricJob),
+                cronExpression: "0/2 * * * * ?"));
+            services.AddSingleton<NetworkMetricJob>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(NetworkMetricJob),
+                cronExpression: "0/2 * * * * ?"));
+            services.AddSingleton<RamMetricJob>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(RamMetricJob),
+                cronExpression: "0/2 * * * * ?"));
 
             services.AddHostedService<QuartzHostedService>();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMigrationRunner migrationRunner)
         {
             if (env.IsDevelopment())
             {
@@ -83,6 +99,8 @@ namespace MetricsAgent
             {
                 endpoints.MapControllers();
             });
+
+            migrationRunner.MigrateUp();
         }
     }
 }

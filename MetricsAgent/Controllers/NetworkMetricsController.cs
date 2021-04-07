@@ -26,7 +26,7 @@ namespace MetricsManager.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("network/from/{fromTime}/to/{toTime}/")]
+        [HttpGet("from/{fromTime}/to/{toTime}/")]
         public IActionResult GetNetworkMetricsTimeInterval([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
             _logger.LogInformation($"GetNetworkMetricsTimeInterval - From time: {fromTime}; To time: {toTime}");
@@ -42,25 +42,6 @@ namespace MetricsManager.Controllers
                 response.Metrics.Add(_mapper.Map<NetworkMetricDto>(metric));
             }
             return Ok();
-        }
-
-        [HttpGet("all")]
-        public IActionResult GetAll()
-        {
-            _logger.LogInformation($"GetAll");
-
-            IList<NetworkMetric> metrics = _repository.GetAll();
-
-            var response = new AllMetricsResponse<NetworkMetricDto>()
-            {
-                Metrics = new List<NetworkMetricDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(_mapper.Map<NetworkMetricDto>(metric));
-            }
-            return Ok(response);
         }
     }
 }

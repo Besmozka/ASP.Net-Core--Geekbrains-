@@ -25,31 +25,12 @@ namespace MetricsManager.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("ram/available")]
+        [HttpGet("available")]
         public IActionResult GetRamAvailableSize()
         {
             _logger.LogInformation($"GetRamAvailableSize - Available:");
 
             return Ok();
-        }
-
-        [HttpGet("all")]
-        public IActionResult GetAll()
-        {
-            _logger.LogInformation($"GetAll");
-
-            IList<RamMetric> metrics = _repository.GetAll();
-
-            var response = new AllMetricsResponse<RamMetricDto>()
-            {
-                Metrics = new List<RamMetricDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(_mapper.Map<RamMetricDto>(metric));
-            }
-            return Ok(response);
         }
     }
 }

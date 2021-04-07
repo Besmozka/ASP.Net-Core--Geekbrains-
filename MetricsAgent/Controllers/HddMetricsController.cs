@@ -31,24 +31,5 @@ namespace MetricsManager.Controllers
             _logger.LogInformation($"GetHddSizeLeft - Left:");
             return Ok();
         }
-
-        [HttpGet("all")]
-        public IActionResult GetAll()
-        {
-            _logger.LogInformation($"GetAll");
-
-            IList<RamMetric> metrics = _repository.GetAll();
-
-            var response = new AllMetricsResponse<HddMetricDto>()
-            {
-                Metrics = new List<HddMetricDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(_mapper.Map<HddMetricDto>(metric));
-            }
-            return Ok(response);
-        }
     }
 }

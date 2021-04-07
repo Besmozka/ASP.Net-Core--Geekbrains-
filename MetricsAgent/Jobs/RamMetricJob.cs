@@ -7,30 +7,30 @@ using System.Threading.Tasks;
 
 namespace MetricsAgent.Jobs
 {
-    public class CpuMetricJob : IJob
+    public class RamMetricJob : IJob
     {
-        private ICpuMetricsRepository _repository;
+        private IRamMetricsRepository _repository;
 
         // счетчик для метрики CPU
         private PerformanceCounter _cpuCounter;
 
-        public CpuMetricJob(ICpuMetricsRepository repository)
+        public RamMetricJob(IRamMetricsRepository repository)
         {
             _repository = repository;
-            _cpuCounter = new PerformanceCounter("Процессор", "% загруженности процессора", "_Total");
+            _cpuCounter = new PerformanceCounter("Память", "Доступно МБ");
         }
 
         public Task Execute(IJobExecutionContext context)
         {
             // получаем значение занятости CPU
-            var cpuUsageInPercents = Convert.ToInt32(_cpuCounter.NextValue());
+            var ramCounter = Convert.ToInt32(_cpuCounter.NextValue());
 
             // узнаем когда мы сняли значение метрики.
             var time = DateTimeOffset.UtcNow;
 
             // теперь можно записать что-то при помощи репозитория
 
-            _repository.Create(new CpuMetric { Time = time, Value = cpuUsageInPercents });
+            _repository.Create(new RamMetric { Time = time, Value = ramCounter });
 
             return Task.CompletedTask;
         }

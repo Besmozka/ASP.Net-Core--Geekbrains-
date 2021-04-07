@@ -43,24 +43,5 @@ namespace MetricsManager.Controllers
             }
             return Ok();
         }
-
-        [HttpGet("all")]
-        public IActionResult GetAll()
-        {
-            _logger.LogInformation($"GetAll");
-
-            IList<DotNetMetric> metrics = _repository.GetAll();
-
-            var response = new AllMetricsResponse<DotNetMetricDto>()
-            {
-                Metrics = new List<DotNetMetricDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(_mapper.Map<DotNetMetricDto>(metric));
-            }
-            return Ok(response);
-        }
     }
 }

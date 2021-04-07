@@ -53,24 +53,5 @@ namespace MetricsAgent.Controllers
 
             return Ok();
         }
-
-        [HttpGet("all")]
-        public IActionResult GetAll()
-        {
-            _logger.LogInformation($"GetAll");
-
-            List<CpuMetric> metrics = _repository.GetAll();
-
-            var response = new AllMetricsResponse<CpuMetricDto>()
-            {
-                Metrics = new List<CpuMetricDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(_mapper.Map<CpuMetricDto>(metric));
-            }
-            return Ok(response);
-        }
     }
 }
