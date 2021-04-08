@@ -30,7 +30,7 @@ namespace MetricsManager.Controllers
         {
             _logger.LogInformation($"GetDotNetErrorsTimeInterval - From time: {fromTime}; To time: {toTime}");
 
-            IList<DotNetMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
+            List<DotNetMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
 
             var response = new AllMetricsResponse<DotNetMetricDto>()
             {
@@ -41,7 +41,7 @@ namespace MetricsManager.Controllers
             {
                 response.Metrics.Add(_mapper.Map<DotNetMetricDto>(metric));
             }
-            return Ok();
+            return Ok(response);
         }
     }
 }

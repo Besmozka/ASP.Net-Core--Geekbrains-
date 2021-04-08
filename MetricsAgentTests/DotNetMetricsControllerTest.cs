@@ -44,16 +44,5 @@ namespace MetricsAgentTests
                 Times.Once());
             _ = Assert.IsAssignableFrom<IActionResult>(result);
         }
-
-        [Fact]
-        public void Call_GetAll_From_Controller()
-        {
-            _mockRepository.Setup(repository => repository.GetAll()).Returns(new List<DotNetMetric>()); ;
-
-            var resultGetAll = _controller.GetAll();
-
-            _mockRepository.Verify(repository => repository.GetAll(), Times.Once());
-            _ = Assert.IsAssignableFrom<IActionResult>(resultGetAll);
-        }
     }
 }

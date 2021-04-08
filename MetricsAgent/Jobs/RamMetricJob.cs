@@ -22,15 +22,11 @@ namespace MetricsAgent.Jobs
 
         public Task Execute(IJobExecutionContext context)
         {
-            // получаем значение занятости CPU
-            var ramCounter = Convert.ToInt32(_cpuCounter.NextValue());
+            var ramAvialable = Convert.ToInt32(_cpuCounter.NextValue());
 
-            // узнаем когда мы сняли значение метрики.
             var time = DateTimeOffset.UtcNow;
 
-            // теперь можно записать что-то при помощи репозитория
-
-            _repository.Create(new RamMetric { Time = time, Value = ramCounter });
+            _repository.Create(new RamMetric { Time = time, Value = ramAvialable });
 
             return Task.CompletedTask;
         }

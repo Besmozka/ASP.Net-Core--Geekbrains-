@@ -30,7 +30,8 @@ namespace MetricsManager.Controllers
         public IActionResult GetNetworkMetricsTimeInterval([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
             _logger.LogInformation($"GetNetworkMetricsTimeInterval - From time: {fromTime}; To time: {toTime}");
-            IList<NetworkMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
+
+            List<NetworkMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
 
             var response = new AllMetricsResponse<NetworkMetricDto>()
             {
@@ -41,7 +42,7 @@ namespace MetricsManager.Controllers
             {
                 response.Metrics.Add(_mapper.Map<NetworkMetricDto>(metric));
             }
-            return Ok();
+            return Ok(response);
         }
     }
 }

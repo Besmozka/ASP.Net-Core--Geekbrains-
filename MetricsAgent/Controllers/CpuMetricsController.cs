@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MetricsAgent.Controllers
 {
@@ -31,6 +32,7 @@ namespace MetricsAgent.Controllers
         public IActionResult GetCpuMetricsTimeInterval([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
             _logger.LogInformation($"GetCpuMetricsTimeInterval - From time: {fromTime}; To time: {toTime}");
+
             List<CpuMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
 
             var response = new AllMetricsResponse<CpuMetricDto>()
@@ -51,7 +53,19 @@ namespace MetricsAgent.Controllers
         {
             _logger.LogInformation($"GetCpuMetricsByPercentileTimeInterval - From time: {fromTime}; To time: {toTime}; Percentile: {percentile}");
 
-            return Ok();
+            List<CpuMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime).OrderBy(x => x.Value).ToList();
+
+            var response = new AllMetricsResponse<CpuMetricDto>()
+            {
+                Metrics = new List<CpuMetricDto>()
+            };
+
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(_mapper.Map<CpuMetricDto>(metric));
+            }
+
+            return Ok(response);
         }
     }
 }

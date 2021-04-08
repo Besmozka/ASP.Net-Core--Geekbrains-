@@ -4,6 +4,7 @@ using MetricsAgent.DAL;
 using MetricsAgent.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 
 namespace MetricsManager.Controllers
@@ -29,8 +30,18 @@ namespace MetricsManager.Controllers
         public IActionResult GetRamAvailableSize()
         {
             _logger.LogInformation($"GetRamAvailableSize - Available:");
+            List<RamMetric> metrics = _repository.GetByTimePeriod(DateTimeOffset.MinValue, DateTimeOffset.UtcNow);
 
-            return Ok();
+            var response = new AllMetricsResponse<RamMetricDto>()
+            {
+                Metrics = new List<RamMetricDto>()
+            };
+
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(_mapper.Map<RamMetricDto>(metric));
+            }
+            return Ok(response);
         }
     }
 }

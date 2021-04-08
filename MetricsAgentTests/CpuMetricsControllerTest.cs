@@ -21,6 +21,8 @@ namespace MetricsAgentTests
         private Mock<ICpuMetricsRepository> _mockRepository;
 
         private Mock<IMapper> _mockMapper;
+
+        private Random _random = new Random();
         public CpuMetricsControllerUnitTests()
         {
             _mockLogger = new Mock<ILogger<CpuMetricsController>>();
@@ -35,7 +37,15 @@ namespace MetricsAgentTests
             // устанавливаем параметр заглушки
             // в заглушке прописываем что в репозиторий прилетит CpuMetric объект
             _mockRepository.Setup(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()))
-                .Returns(new List<CpuMetric>());
+                .Returns(new List<CpuMetric>() 
+                { 
+                    new CpuMetric() 
+                    { 
+                        Id = _random.Next(),
+                        Time = DateTimeOffset.FromUnixTimeSeconds(_random.Next()),
+                        Value = _random.Next()
+                    } 
+                });
 
             Random random = new Random();
             var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50));
@@ -60,17 +70,6 @@ namespace MetricsAgentTests
             var resultGetCpuMetricsByPercentileTimeInterval = _controller.GetCpuMetricsByPercentileTimeInterval(fromTime, toTime, percentile);
 
             _ = Assert.IsAssignableFrom<IActionResult>(resultGetCpuMetricsByPercentileTimeInterval);
-        }
-
-        [Fact]
-        public void Call_GetAll_From_Controller()
-        {
-            _mockRepository.Setup(repository => repository.GetAll()).Returns(new List<CpuMetric>());
-
-            var resultGetAll = _controller.GetAll();
-
-            _mockRepository.Verify(repository => repository.GetAll(), Times.Once());
-            _ = Assert.IsAssignableFrom<IActionResult>(resultGetAll);
         }
     }
 }

@@ -17,9 +17,6 @@ namespace MetricsAgent
 {
     public class Startup
     {
-        private int tableSize = 10;
-        private Random random = new Random();
-
         private const string ConnectionString = "Data Source=metrics.db";
         public Startup(IConfiguration configuration)
         {
@@ -62,10 +59,10 @@ namespace MetricsAgent
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(CpuMetricJob),
                 cronExpression: "0/2 * * * * ?")); // запускать каждые 2 секунды
-            //services.AddSingleton<DotNetMetricJob>();
-            //services.AddSingleton(new JobSchedule(
-            //    jobType: typeof(DotNetMetricJob),
-            //    cronExpression: "0/2 * * * * ?"));
+            services.AddSingleton<DotNetMetricJob>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(DotNetMetricJob),
+                cronExpression: "0/2 * * * * ?"));
             services.AddSingleton<HddMetricJob>();
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(HddMetricJob),

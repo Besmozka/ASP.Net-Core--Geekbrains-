@@ -22,15 +22,11 @@ namespace MetricsAgent.Jobs
 
         public Task Execute(IJobExecutionContext context)
         {
-            // получаем значение занятости CPU
-            var HddUsageInPercents = Convert.ToInt32(_cpuCounter.NextValue());
+            var HddLeftSize = Convert.ToInt32(_cpuCounter.NextValue());
 
-            // узнаем когда мы сняли значение метрики.
             var time = DateTimeOffset.UtcNow;
 
-            // теперь можно записать что-то при помощи репозитория
-
-            _repository.Create(new HddMetric { Time = time, Value = HddUsageInPercents });
+            _repository.Create(new HddMetric { Time = time, Value = HddLeftSize });
 
             return Task.CompletedTask;
         }

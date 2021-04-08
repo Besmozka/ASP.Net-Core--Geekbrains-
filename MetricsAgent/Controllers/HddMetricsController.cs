@@ -4,6 +4,7 @@ using MetricsAgent.DAL;
 using MetricsAgent.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 
 namespace MetricsManager.Controllers
@@ -25,11 +26,22 @@ namespace MetricsManager.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("hdd/left")]
+        [HttpGet("left")]
         public IActionResult GetHddSizeLeft()
         {
             _logger.LogInformation($"GetHddSizeLeft - Left:");
-            return Ok();
+            List<HddMetric> metrics = _repository.GetByTimePeriod(DateTimeOffset.MinValue, DateTimeOffset.UtcNow);
+
+            var response = new AllMetricsResponse<HddMetricDto>()
+            {
+                Metrics = new List<HddMetricDto>()
+            };
+
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(_mapper.Map<HddMetricDto>(metric));
+            }
+            return Ok(response);
         }
     }
 }
