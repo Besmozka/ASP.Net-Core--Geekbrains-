@@ -20,6 +20,8 @@ namespace MetricsAgentTests
         private Mock<IDotNetMetricsRepository> _mockRepository;
 
         private Mock<IMapper> _mockMapper;
+
+        private Random _random;
         public DotNetControllerUnitTests()
         {
             _mockLogger = new Mock<ILogger<DotNetMetricsController>>();
@@ -33,10 +35,8 @@ namespace MetricsAgentTests
         {
             _mockRepository.Setup(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()))
                 .Returns(new List<DotNetMetric>()); ;
-
-            Random random = new Random();
-            var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50));
-            var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50, 100));
+            var fromTime = DateTimeOffset.FromUnixTimeSeconds(_random.Next(50));
+            var toTime = DateTimeOffset.FromUnixTimeSeconds(_random.Next(50, 100));
 
             var result = _controller.GetDotNetErrorsTimeInterval(fromTime, toTime);
 

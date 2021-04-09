@@ -20,6 +20,8 @@ namespace MetricsAgentTests
         private Mock<IRamMetricsRepository> _mockRepository;
 
         private Mock<IMapper> _mockMapper;
+
+        private Random _random = new Random();
         public RamControllerUnitTests()
         {
             _mockLogger = new Mock<ILogger<RamMetricsController>>();
@@ -31,9 +33,21 @@ namespace MetricsAgentTests
         [Fact]
         public void GetAvailableSize_ReturnsOk()
         {
-            var result = _controller.GetRamAvailableSize();
+            _mockRepository.Setup(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()))
+                  .Returns(new List<RamMetric>()
+                  {
+                    new RamMetric()
+                    {
+                        Id = _random.Next(),
+                        Time = DateTimeOffset.FromUnixTimeSeconds(_random.Next()),
+                        Value = _random.Next()
+                    }
+                  });
 
-            _ = Assert.IsAssignableFrom<IActionResult>(result);
+            var resultGetRamAvailableSize = _controller.GetRamAvailableSize();
+
+            _mockRepository.Verify(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()), Times.Once());
+            _ = Assert.IsAssignableFrom<IActionResult>(resultGetRamAvailableSize);
         }
     }
 }

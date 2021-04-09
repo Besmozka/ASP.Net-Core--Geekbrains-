@@ -60,10 +60,30 @@ namespace MetricsAgent.Controllers
                 Metrics = new List<CpuMetricDto>()
             };
 
-            foreach (var metric in metrics)
+            int listPercentileIndex;
+
+            switch (percentile)
             {
-                response.Metrics.Add(_mapper.Map<CpuMetricDto>(metric));
+                case Percentile.Median:
+                    listPercentileIndex = metrics.Count * 50 / 100;
+                    break;
+                case Percentile.P75:
+                    listPercentileIndex = metrics.Count * 75 / 100;
+                    break;
+                case Percentile.P90:
+                    listPercentileIndex = metrics.Count * 90 / 100;
+                    break;
+                case Percentile.P95:
+                    listPercentileIndex = metrics.Count * 95 / 100;
+                    break;
+                case Percentile.P99:
+                    listPercentileIndex = metrics.Count * 99 / 100;
+                    break;
+                default:
+                    return BadRequest($"{percentile} не существует");                   
             }
+
+            response.Metrics.Add(_mapper.Map<CpuMetricDto>(metrics[listPercentileIndex]));
 
             return Ok(response);
         }

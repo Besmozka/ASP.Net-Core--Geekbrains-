@@ -47,9 +47,8 @@ namespace MetricsAgentTests
                     } 
                 });
 
-            Random random = new Random();
-            var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50));
-            var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50, 100));
+            var fromTime = DateTimeOffset.FromUnixTimeSeconds(_random.Next(50));
+            var toTime = DateTimeOffset.FromUnixTimeSeconds(_random.Next(50, 100));
             // выполняем действие на контроллере
             var resultGetCpuMetricsTimeInterval = _controller.GetCpuMetricsTimeInterval(fromTime, toTime);
 
@@ -62,13 +61,24 @@ namespace MetricsAgentTests
         [Fact]
         public void Call_GetCpuMetricsByPercentileTimeInterval_From_Controller()
         {
-            Random random = new Random();
-            var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50));
-            var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50, 100));
-            Percentile percentile = (Percentile)random.Next(1, 4);
+            _mockRepository.Setup(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()))
+                .Returns(new List<CpuMetric>()
+                {
+                    new CpuMetric()
+                    {
+                        Id = _random.Next(),
+                        Time = DateTimeOffset.FromUnixTimeSeconds(_random.Next()),
+                        Value = _random.Next()
+                    }
+                });
+
+            var fromTime = DateTimeOffset.FromUnixTimeSeconds(_random.Next(50));
+            var toTime = DateTimeOffset.FromUnixTimeSeconds(_random.Next(50, 100));
+            Percentile percentile = (Percentile)_random.Next(1, 4);
 
             var resultGetCpuMetricsByPercentileTimeInterval = _controller.GetCpuMetricsByPercentileTimeInterval(fromTime, toTime, percentile);
 
+            _mockRepository.Verify(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()), Times.Once());
             _ = Assert.IsAssignableFrom<IActionResult>(resultGetCpuMetricsByPercentileTimeInterval);
         }
     }
