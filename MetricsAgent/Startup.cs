@@ -11,13 +11,13 @@ using Microsoft.Extensions.Hosting;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
-using System;
 
 namespace MetricsAgent
 {
     public class Startup
     {
         private const string ConnectionString = "Data Source=metrics.db";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -77,7 +77,6 @@ namespace MetricsAgent
                 cronExpression: "0/2 * * * * ?"));
 
             services.AddHostedService<QuartzHostedService>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

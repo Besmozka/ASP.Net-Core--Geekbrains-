@@ -1,7 +1,9 @@
-﻿using EnumsLibrary;
+﻿using Core;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
+using Microsoft.Extensions.Logging;
+using MetricsManager.DAL;
+using System.Collections.Generic;
 
 namespace MetricsManager.Controllers
 {

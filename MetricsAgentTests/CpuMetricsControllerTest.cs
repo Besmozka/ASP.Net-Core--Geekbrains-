@@ -1,5 +1,5 @@
 using AutoMapper;
-using EnumsLibrary;
+using Core;
 using MetricsAgent;
 using MetricsAgent.Controllers;
 using MetricsAgent.DAL;

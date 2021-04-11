@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Core;
+using Microsoft.AspNetCore.Mvc;
 using System;
+using Microsoft.Extensions.Logging;
+using MetricsManager.DAL;
+using System.Collections.Generic;
 
 namespace MetricsManager.Controllers
 {

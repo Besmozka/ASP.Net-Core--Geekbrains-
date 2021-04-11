@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 
-namespace MetricsManager.Controllers
+namespace MetricsAgent.Controllers
 {
     [Route("api/metrics/network")]
     [ApiController]

@@ -1,5 +1,4 @@
-﻿
-namespace EnumsLibrary
+﻿namespace Core
 {
     public enum Percentile
     {

@@ -1,5 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MetricsManager.DAL;
+using MetricsManager.DAL.Interfaces;
+using MetricsManager.DAL.Repositories;
 
 namespace MetricsManager.Controllers
 {
@@ -7,22 +12,29 @@ namespace MetricsManager.Controllers
     [ApiController]
     public class AgentsController : ControllerBase
     {
-        private readonly AgentsList _agentsList = new AgentsList();
-
         private readonly ILogger<AgentsController> _logger;
 
-        public AgentsController(ILogger<AgentsController> logger, AgentsList agentsList)
+        private readonly IAgentsRepository _repository;
+
+        private readonly AgentsList _agents;
+        public AgentsController(ILogger<AgentsController> logger, IAgentsRepository repository, AgentsList agents)
         {
-            _agentsList = agentsList;
             _logger = logger;
             _logger.LogDebug(1, "NLog встроен в CpuMetricsController");
+            _repository = repository;
+            _agents = agents;
         }
 
         [HttpPost("register")]
         public IActionResult RegisterAgent([FromBody] AgentInfo agentInfo)
         {
-            _agentsList.agents.Add(agentInfo);
+            GetAgentsListFromRepository();
             _logger.LogInformation($"RegisterAgent - Agent Info: {agentInfo}");
+            if (_agents.Agents.Exists(agent => agent.AgentAddress == agentInfo.AgentAddress))
+            {
+                return BadRequest("Такой агент существует");
+            }
+            _repository.Create(agentInfo);
             return Ok();
         }
 
@@ -30,7 +42,7 @@ namespace MetricsManager.Controllers
         public IActionResult EnableAgentById([FromRoute] int agentId)
         {
             _logger.LogInformation($"EnableAgentById - Agent ID: {agentId}");
-            return Ok();
+            return Ok(_repository.GetAgents());
         }
 
         [HttpPut("disable/{agentId}")]
@@ -43,8 +55,14 @@ namespace MetricsManager.Controllers
         [HttpGet("numberAgents")]
         public IActionResult GetNumberOfAgents()
         {
-            _logger.LogInformation($"GetNumberOfAgents - {_agentsList.agents.Count}");
-            return Ok($"Количество агентов: {_agentsList.agents.Count}");
+            var numberOfAgents = _repository.GetAgents().Count;
+            _logger.LogInformation($"GetNumberOfAgents - {numberOfAgents}");
+            return Ok($"Количество агентов: {numberOfAgents}");
+        }
+
+        private void GetAgentsListFromRepository()
+        {
+            _agents.Agents = _repository.GetAgents();
         }
     }
 }
