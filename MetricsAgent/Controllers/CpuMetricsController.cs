@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using EnumsLibrary;
+﻿using EnumsLibrary;
 using MetricsAgent.DAL;
-using MetricsAgent.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -17,14 +15,11 @@ namespace MetricsAgent.Controllers
         private ICpuMetricsRepository _repository;
 
         private readonly ILogger<CpuMetricsController> _logger;
-
-        private readonly IMapper _mapper;
-        public CpuMetricsController(ILogger<CpuMetricsController> logger, ICpuMetricsRepository repository, IMapper mapper)
+        public CpuMetricsController(ILogger<CpuMetricsController> logger, ICpuMetricsRepository repository)
         {
             _repository = repository;
             _logger = logger;
             _logger.LogDebug("Nlog встроен в CpuMetricsController");
-            _mapper = mapper;
         }
 
         [HttpGet("from/{fromTime}/to/{toTime}/")]
@@ -33,16 +28,7 @@ namespace MetricsAgent.Controllers
             _logger.LogInformation($"GetCpuMetricsTimeInterval - From time: {fromTime}; To time: {toTime}");
             List<CpuMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
 
-            var response = new AllMetricsResponse<CpuMetricDto>()
-            {
-                Metrics = new List<CpuMetricDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(_mapper.Map<CpuMetricDto>(metric));
-            }
-            return Ok(response);
+            return Ok(metrics);
         }
 
         [HttpGet("from/{fromTime}/to/{toTime}/percentiles/{percentile}")]
@@ -50,6 +36,7 @@ namespace MetricsAgent.Controllers
             [FromRoute] Percentile percentile)
         {
             _logger.LogInformation($"GetCpuMetricsByPercentileTimeInterval - From time: {fromTime}; To time: {toTime}; Percentile: {percentile}");
+            List<CpuMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
 
             return Ok();
         }
@@ -57,20 +44,9 @@ namespace MetricsAgent.Controllers
         [HttpGet("all")]
         public IActionResult GetAll()
         {
-            _logger.LogInformation($"GetAll");
-
+            _logger.LogInformation("Get all");
             List<CpuMetric> metrics = _repository.GetAll();
-
-            var response = new AllMetricsResponse<CpuMetricDto>()
-            {
-                Metrics = new List<CpuMetricDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(_mapper.Map<CpuMetricDto>(metric));
-            }
-            return Ok(response);
+            return Ok(metrics);
         }
     }
 }

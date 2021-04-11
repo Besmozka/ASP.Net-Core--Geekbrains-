@@ -9,8 +9,6 @@ namespace MetricsAgent.DAL
     {
         List<T> GetAll();
 
-        List<T> GetByTimePeriod(DateTimeOffset fromTime, DateTimeOffset toTime);
-
         T GetById(int id);
 
         void Create(T item);
@@ -19,7 +17,7 @@ namespace MetricsAgent.DAL
 
         void Delete(int id);
 
-        
+        List<T> GetByTimePeriod(DateTimeOffset fromTime, DateTimeOffset toTime);
     }
 
 }

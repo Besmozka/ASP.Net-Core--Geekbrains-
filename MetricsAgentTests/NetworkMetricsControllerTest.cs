@@ -1,4 +1,3 @@
-using AutoMapper;
 using MetricsAgent;
 using MetricsAgent.DAL;
 using MetricsManager.Controllers;
@@ -6,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
-using System.Collections.Generic;
 using Xunit;
 
 namespace MetricsAgentTests
@@ -19,22 +17,18 @@ namespace MetricsAgentTests
 
         private Mock<INetworkMetricsRepository> _mockRepository;
 
-        private Mock<IMapper> _mockMapper;
-
         public NetworkControllerUnitTests()
         {
             _mockLogger = new Mock<ILogger<NetworkMetricsController>>();
             _mockRepository = new Mock<INetworkMetricsRepository>();
-            _mockMapper = new Mock<IMapper>();
-            _controller = new NetworkMetricsController(_mockLogger.Object, _mockRepository.Object, _mockMapper.Object);
+            _controller = new NetworkMetricsController(_mockLogger.Object, _mockRepository.Object);
         }
 
         [Fact]
         public void GetMetricsTimeInterval_ReturnsOk()
         {
             //Arrange
-            _mockRepository.Setup(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()))
-                .Returns(new List<NetworkMetric>()); ;
+            _mockRepository.Setup(repository => repository.Create(It.IsAny<NetworkMetric>())).Verifiable();
             Random random = new Random();
             var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50));
             var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50, 100));
@@ -43,20 +37,8 @@ namespace MetricsAgentTests
             var result = _controller.GetNetworkMetricsTimeInterval(fromTime, toTime);
 
             // Assert
-            _mockRepository.Verify(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()),
-                Times.Once());
+            _mockRepository.Verify(repository => repository.Create(It.IsAny<NetworkMetric>()), Times.Exactly(2));
             _ = Assert.IsAssignableFrom<IActionResult>(result);
-        }
-
-        [Fact]
-        public void Call_GetAll_From_Controller()
-        {
-            _mockRepository.Setup(repository => repository.GetAll()).Returns(new List<NetworkMetric>()); ;
-
-            var resultGetAll = _controller.GetAll();
-
-            _mockRepository.Verify(repository => repository.GetAll(), Times.Once());
-            _ = Assert.IsAssignableFrom<IActionResult>(resultGetAll);
         }
     }
 }

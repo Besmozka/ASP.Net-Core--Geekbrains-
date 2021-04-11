@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using MetricsAgent;
+﻿using MetricsAgent;
 using MetricsAgent.DAL;
-using MetricsAgent.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,51 +14,28 @@ namespace MetricsManager.Controllers
         private INetworkMetricsRepository _repository;
 
         private readonly ILogger<NetworkMetricsController> _logger;
-
-        private readonly IMapper _mapper;
-        public NetworkMetricsController(ILogger<NetworkMetricsController> logger, INetworkMetricsRepository repository, IMapper mapper)
+        public NetworkMetricsController(ILogger<NetworkMetricsController> logger, INetworkMetricsRepository repository)
         {
             _repository = repository;
             _logger = logger;
             _logger.LogDebug("Nlog встроен в NetworkMetricsController");
-            _mapper = mapper;
         }
 
         [HttpGet("network/from/{fromTime}/to/{toTime}/")]
         public IActionResult GetNetworkMetricsTimeInterval([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
             _logger.LogInformation($"GetNetworkMetricsTimeInterval - From time: {fromTime}; To time: {toTime}");
-            IList<NetworkMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
+            List<NetworkMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime);
 
-            var response = new AllMetricsResponse<NetworkMetricDto>()
-            {
-                Metrics = new List<NetworkMetricDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(_mapper.Map<NetworkMetricDto>(metric));
-            }
-            return Ok();
+            return Ok(metrics);
         }
 
         [HttpGet("all")]
         public IActionResult GetAll()
         {
-            _logger.LogInformation($"GetAll");
-
-            IList<NetworkMetric> metrics = _repository.GetAll();
-
-            var response = new AllMetricsResponse<NetworkMetricDto>()
-            {
-                Metrics = new List<NetworkMetricDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(_mapper.Map<NetworkMetricDto>(metric));
-            }
-            return Ok(response);
+            _logger.LogInformation("Get all");
+            List<NetworkMetric> metrics = _repository.GetAll();
+            return Ok(metrics);
         }
     }
 }

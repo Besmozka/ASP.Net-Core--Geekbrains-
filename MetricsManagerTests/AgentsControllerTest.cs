@@ -6,6 +6,7 @@ using Xunit;
 using System.Text;
 using Moq;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace MetricsManagerTests
 {
@@ -13,16 +14,18 @@ namespace MetricsManagerTests
     {
         private AgentsController _controller;
 
+        private AgentsList _agentsList;
+
         private Mock<ILogger<AgentsController>> _mockLogger;
 
-        private Mock<AgentsList> _mockAgentsList;
+        private Mock<AgentsList> mockAgentsList;
 
-        private int _maxAgentsCount = 100;
+        private int _maxAgentsCount = 1000;
         public AgentsControllerUnitTests()
         {
             _mockLogger = new Mock<ILogger<AgentsController>>();
-            _mockAgentsList = new Mock<AgentsList>();
-            _controller = new AgentsController(_mockLogger.Object, _mockAgentsList.Object);
+            mockAgentsList = new Mock<AgentsList>();
+            _controller = new AgentsController(_mockLogger.Object, mockAgentsList.Object);
         }
 
         [Fact]
