@@ -34,9 +34,12 @@ namespace MetricsManager.DAL.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return DateTimeOffset.FromUnixTimeSeconds(connection
-                    .Query<HddMetric>("SELECT * FROM hddmetrics")
-                    .Max(item => Convert.ToInt64(item.Time)));
+                var metrics = connection.Query<HddMetric>("SELECT * FROM hddmetrics").ToList();
+                if (metrics.Count != 0)
+                {
+                    return metrics.Max(item => item.Time);
+                }
+                return DateTimeOffset.MinValue;
             }
         }
 
@@ -44,8 +47,8 @@ namespace MetricsManager.DAL.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.Query<HddMetric>("SELECT Id, AgentId, Time, Value FROM hddmetrics WHERE Id==@id Time>=@fromTime AND Time<=@toTime",
-                    new { id = agentId, fromTime = fromTime.ToUnixTimeSeconds(), toTime = toTime.ToUnixTimeSeconds() }).ToList();
+                return connection.Query<HddMetric>("SELECT Id, AgentId, Time, Value FROM hddmetrics WHERE AgentId==@agentId AND Time>=@fromTime AND Time<=@toTime",
+                    new { agentId = agentId, fromTime = fromTime.ToUnixTimeSeconds(), toTime = toTime.ToUnixTimeSeconds() }).ToList();
             }
         }
 

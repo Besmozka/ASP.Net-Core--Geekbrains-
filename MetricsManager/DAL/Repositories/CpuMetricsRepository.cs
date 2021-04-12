@@ -34,9 +34,12 @@ namespace MetricsManager.DAL.Repositories
         {
             using (var connection  = new SQLiteConnection(ConnectionString))
             {
-                return DateTimeOffset.FromUnixTimeSeconds(connection
-                    .Query<CpuMetric>("SELECT * FROM cpumetrics")
-                    .Max(item => Convert.ToInt64(item.Time)));
+                var metrics = connection.Query<CpuMetric>("SELECT * FROM cpumetrics").ToList();
+                if (metrics.Count != 0)
+                {
+                    return metrics.Max(item => item.Time);
+                }
+                return DateTimeOffset.MinValue;
             }
         }
 
@@ -44,8 +47,8 @@ namespace MetricsManager.DAL.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.Query<CpuMetric>("SELECT Id, Time, Value FROM cpumetrics WHERE Id==@id Time>=@fromTime AND Time<=@toTime",
-                    new { id = agentId, fromTime = fromTime.ToUnixTimeSeconds(), toTime = toTime.ToUnixTimeSeconds() }).ToList();
+                return connection.Query<CpuMetric>("SELECT Id, AgentId, Time, Value FROM cpumetrics WHERE AgentId==@agentId AND Time>=@fromTime AND Time<=@toTime",
+                    new { agentId = agentId, fromTime = fromTime.ToUnixTimeSeconds(), toTime = toTime.ToUnixTimeSeconds() }).ToList();
             }
         }
 

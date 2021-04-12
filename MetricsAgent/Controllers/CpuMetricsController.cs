@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
-using Core;
 using MetricsAgent.DAL;
 using MetricsAgent.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MetricsAgent.Controllers
 {
@@ -15,7 +13,7 @@ namespace MetricsAgent.Controllers
     [ApiController]
     public class CpuMetricsController : ControllerBase
     {
-        private ICpuMetricsRepository _repository;
+        private readonly ICpuMetricsRepository _repository;
 
         private readonly ILogger<CpuMetricsController> _logger;
 
@@ -44,27 +42,6 @@ namespace MetricsAgent.Controllers
             {
                 response.Metrics.Add(_mapper.Map<CpuMetricDto>(metric));
             }
-            return Ok(response);
-        }
-
-        [HttpGet("from/{fromTime}/to/{toTime}/percentiles/{percentile}")]
-        public IActionResult GetCpuMetricsByPercentileTimeInterval([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime,
-            [FromRoute] Percentile percentile)
-        {
-            _logger.LogInformation($"GetCpuMetricsByPercentileTimeInterval - From time: {fromTime}; To time: {toTime}; Percentile: {percentile}");
-
-            List<CpuMetric> metrics = _repository.GetByTimePeriod(fromTime, toTime).OrderBy(x => x.Value).ToList();
-
-            var response = new AllMetricsResponse<CpuMetricDto>()
-            {
-                Metrics = new List<CpuMetricDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(_mapper.Map<CpuMetricDto>(metric));
-            }
-
             return Ok(response);
         }
     }

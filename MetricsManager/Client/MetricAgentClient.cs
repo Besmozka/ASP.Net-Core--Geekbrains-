@@ -21,15 +21,19 @@ namespace MetricsManager.Client
 
         public AllMetricsResponse<HddMetric> GetAllHddMetrics(GetAllHddMetricsApiRequest request)
         {
-            var fromParameter = request.FromTime.ToUnixTimeSeconds();
-            var toParameter = request.ToTime.ToUnixTimeSeconds();
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}/api/hddmetrics/from/{fromParameter}/to/{toParameter}");
+            var fromParameter = request.FromTime.ToLocalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            var toParameter = request.ToTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}api/metrics/hdd/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
 
                 using var responseStream = response.Content.ReadAsStreamAsync().Result;
-                return JsonSerializer.DeserializeAsync<AllMetricsResponse<HddMetric>>(responseStream).Result;
+                return JsonSerializer.DeserializeAsync<AllMetricsResponse<HddMetric>>(responseStream,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    }).Result;
             }
             catch (Exception ex)
             {
@@ -40,15 +44,19 @@ namespace MetricsManager.Client
 
         public AllMetricsResponse<RamMetric> GetAllRamMetrics(GetAllRamMetricsApiRequest request)
         {
-            var fromParameter = request.FromTime.ToUnixTimeSeconds();
-            var toParameter = request.ToTime.ToUnixTimeSeconds();
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}/api/hddmetrics/from/{fromParameter}/to/{toParameter}");
+            var fromParameter = request.FromTime.ToLocalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            var toParameter = request.ToTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}api/metrics/ram/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
 
                 using var responseStream = response.Content.ReadAsStreamAsync().Result;
-                return JsonSerializer.DeserializeAsync<AllMetricsResponse<RamMetric>>(responseStream).Result;
+                return JsonSerializer.DeserializeAsync<AllMetricsResponse<RamMetric>>(responseStream,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    }).Result;
             }
             catch (Exception ex)
             {
@@ -59,15 +67,19 @@ namespace MetricsManager.Client
 
         public AllMetricsResponse<CpuMetric> GetAllCpuMetrics(GetAllCpuMetricsApiRequest request)
         {
-            var fromParameter = request.FromTime.ToUnixTimeSeconds();
-            var toParameter = request.ToTime.ToUnixTimeSeconds();
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}/api/hddmetrics/from/{fromParameter}/to/{toParameter}");
+            var fromParameter = request.FromTime.ToLocalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            var toParameter = request.ToTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}api/metrics/cpu/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
 
                 using var responseStream = response.Content.ReadAsStreamAsync().Result;
-                return JsonSerializer.DeserializeAsync<AllMetricsResponse<CpuMetric>>(responseStream).Result;
+                return JsonSerializer.DeserializeAsync<AllMetricsResponse<CpuMetric>>(responseStream,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    }).Result;
             }
             catch (Exception ex)
             {
@@ -78,15 +90,19 @@ namespace MetricsManager.Client
 
         public AllMetricsResponse<NetworkMetric> GetAllNetworkMetrics(GetAllNetworkMetricsApiRequest request)
         {
-            var fromParameter = request.FromTime.ToUnixTimeSeconds();
-            var toParameter = request.ToTime.ToUnixTimeSeconds();
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}/api/hddmetrics/from/{fromParameter}/to/{toParameter}");
+            var fromParameter = request.FromTime.ToLocalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            var toParameter = request.ToTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}api/metrics/network/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
 
                 using var responseStream = response.Content.ReadAsStreamAsync().Result;
-                return JsonSerializer.DeserializeAsync<AllMetricsResponse<NetworkMetric>>(responseStream).Result;
+                return JsonSerializer.DeserializeAsync<AllMetricsResponse<NetworkMetric>>(responseStream,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    }).Result;
             }
             catch (Exception ex)
             {
@@ -97,15 +113,19 @@ namespace MetricsManager.Client
 
         public AllMetricsResponse<DotNetMetric> GetAllDotNetMetrics(GetAllDotNetMetricsApiRequest request)
         {
-            var fromParameter = request.FromTime.ToUnixTimeSeconds();
-            var toParameter = request.ToTime.ToUnixTimeSeconds();
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}/api/hddmetrics/from/{fromParameter}/to/{toParameter}");
+            var fromParameter = request.FromTime.ToLocalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            var toParameter = request.ToTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}api/metrics/dotnet/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
 
                 using var responseStream = response.Content.ReadAsStreamAsync().Result;
-                return JsonSerializer.DeserializeAsync<AllMetricsResponse<DotNetMetric>>(responseStream).Result;
+                return JsonSerializer.DeserializeAsync<AllMetricsResponse<DotNetMetric>>(responseStream,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    }).Result;
             }
             catch (Exception ex)
             {

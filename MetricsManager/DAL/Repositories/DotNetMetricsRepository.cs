@@ -34,9 +34,12 @@ namespace MetricsManager.DAL.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return DateTimeOffset.FromUnixTimeSeconds(connection
-                    .Query<DotNetMetric>("SELECT * FROM dotnetmetrics")
-                    .Max(item => Convert.ToInt64(item.Time)));
+                var metrics = connection.Query<DotNetMetric>("SELECT * FROM dotnetmetrics").ToList();
+                if (metrics.Count != 0)
+                {
+                    return metrics.Max(item => item.Time);
+                }
+                return DateTimeOffset.MinValue;
             }
         }
 
@@ -44,8 +47,8 @@ namespace MetricsManager.DAL.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.Query<DotNetMetric>("SELECT Id, AgentId, Time, Value FROM dotnetmetrics WHERE Id==@id Time>=@fromTime AND Time<=@toTime",
-                    new { id = agentId, fromTime = fromTime.ToUnixTimeSeconds(), toTime = toTime.ToUnixTimeSeconds() }).ToList();
+                return connection.Query<DotNetMetric>("SELECT Id, AgentId, Time, Value FROM dotnetmetrics WHERE AgentId==@agentId AND Time>=@fromTime AND Time<=@toTime",
+                    new { agentId = agentId, fromTime = fromTime.ToUnixTimeSeconds(), toTime = toTime.ToUnixTimeSeconds() }).ToList();
             }
         }
 

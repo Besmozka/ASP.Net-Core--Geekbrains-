@@ -4,7 +4,10 @@ using System;
 using Microsoft.Extensions.Logging;
 using MetricsManager.DAL;
 using System.Collections.Generic;
+using AutoMapper;
 using MetricsManager.DAL.Repositories;
+using MetricsManager.Responses;
+using MetricsManager.Responses.Models;
 
 namespace MetricsManager.Controllers
 {
@@ -15,19 +18,34 @@ namespace MetricsManager.Controllers
         private readonly ILogger<DotNetMetricsController> _logger;
 
         private readonly DotNetMetricsRepository _repository;
-        public DotNetMetricsController(ILogger<DotNetMetricsController> logger, DotNetMetricsRepository repository)
+
+        private readonly IMapper _mapper;
+
+        public DotNetMetricsController(ILogger<DotNetMetricsController> logger, DotNetMetricsRepository repository, IMapper mapper)
         {
             _logger = logger;
             _logger.LogDebug(1, "NLog встроен в DotNetMetricsController");
             _repository = repository;
+            _mapper = mapper;
         }
            
         [HttpGet("errors-count/agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetDotNetMetricsFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
             _logger.LogInformation($"GetDotNetMetricsFromAgent - Agent ID: {agentId}; From time: {fromTime}; To time: {toTime}");
+
             List<DotNetMetric> metrics = _repository.GetAgentMetricByTimePeriod(agentId, fromTime, toTime);
-            return Ok();
+
+            var response = new AllMetricsResponse<DotNetMetricDto>
+            {
+                Metrics = new List<DotNetMetricDto>()
+            };
+
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(_mapper.Map<DotNetMetricDto>(metric));
+            }
+            return Ok(response);
         }
     }
 }

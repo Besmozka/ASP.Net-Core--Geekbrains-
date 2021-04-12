@@ -17,6 +17,7 @@ namespace MetricsManager.Controllers
         private readonly IAgentsRepository _repository;
 
         private readonly AgentsList _agents;
+
         public AgentsController(ILogger<AgentsController> logger, IAgentsRepository repository, AgentsList agents)
         {
             _logger = logger;

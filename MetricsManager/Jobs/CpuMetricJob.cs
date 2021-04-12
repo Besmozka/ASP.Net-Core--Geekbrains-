@@ -44,10 +44,22 @@ namespace MetricsManager.Jobs
                     FromTime = timeOfLastRequest,
                     ToTime = DateTimeOffset.UtcNow,
                 });
-
-                foreach (var metric in metricsResponse.Metrics)
+                if (metricsResponse != null)
                 {
-                    _repository.Create(metric);
+                    foreach (var metric in metricsResponse.Metrics)
+                    {
+                        _repository.Create(
+                            new CpuMetric
+                            {
+                                AgentId = agent.AgentId,
+                                Time = metric.Time,
+                                Value = metric.Value
+                            });
+                    }
+                }
+                else
+                {
+                    _logger.LogError($"CPU metrics response from agent(id {agent.AgentId}) was null");
                 }
             }
             return Task.CompletedTask;
