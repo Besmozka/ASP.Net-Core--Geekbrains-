@@ -20,12 +20,23 @@ namespace MetricsManager.DAL.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                connection.Execute("INSERT INTO cpumetrics(value, time) VALUES(@value, @time)",
+                connection.Execute("INSERT INTO cpumetrics(agentid, value, time) VALUES(@agentid, @value, @time)",
                     new
                     {
+                        agentid = item.AgentId,
                         value = item.Value,
                         time = item.Time.ToUnixTimeSeconds()
                     });
+            }
+        }
+
+        public DateTimeOffset GetLastMetricTime(int agentId)
+        {
+            using (var connection  = new SQLiteConnection(ConnectionString))
+            {
+                return DateTimeOffset.FromUnixTimeSeconds(connection
+                    .Query<CpuMetric>("SELECT * FROM cpumetrics")
+                    .Max(item => Convert.ToInt64(item.Time)));
             }
         }
 

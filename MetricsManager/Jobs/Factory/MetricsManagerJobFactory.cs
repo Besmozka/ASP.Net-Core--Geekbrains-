@@ -4,11 +4,10 @@ using Quartz.Spi;
 using System;
 
 namespace MetricsManager.Jobs
-{
-    public class SingletonJobFactory : IJobFactory
+{    public class MetricsManagerJobFactory : IJobFactory
     {
         private readonly IServiceProvider _serviceProvider;
-        public SingletonJobFactory(IServiceProvider serviceProvider)
+        public MetricsManagerJobFactory(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }

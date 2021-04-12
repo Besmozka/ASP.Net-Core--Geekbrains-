@@ -20,10 +20,9 @@ namespace MetricsManager.DAL.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                connection.Execute("INSERT INTO agentslist(AgentId, AgentAddress) VALUES(@agentId, @address)",
+                connection.Execute("INSERT INTO agentslist(AgentAddress) VALUES(@address)",
                                         new
                                         {
-                                            agentId = item.AgentId,
                                             address = item.AgentAddress.ToString()
                                         });
             }

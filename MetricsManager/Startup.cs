@@ -1,5 +1,6 @@
 using AutoMapper;
 using FluentMigrator.Runner;
+using MetricsManager.Client;
 using MetricsManager.DAL;
 using MetricsManager.DAL.Interfaces;
 using MetricsManager.DAL.Repositories;
@@ -10,9 +11,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Polly;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
+using System;
 
 namespace MetricsManager
 {
@@ -38,8 +41,7 @@ namespace MetricsManager
             services.AddSingleton<AgentsList>();
 
             services.AddHttpClient<IMetricsAgentClient, MetricsAgentClient>()
-                .AddTransientHttpErrorPolicy(p =>
-                    p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(1000)));
+                .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(1000)));
 
 
             services.AddFluentMigratorCore()
@@ -60,14 +62,12 @@ namespace MetricsManager
             services.AddSingleton<IMetricsRepository<NetworkMetric>, NetworkMetricsRepository>();
             services.AddSingleton<IMetricsRepository<RamMetric>, RamMetricsRepository>();
 
-            // ДОбавляем сервисы
-            services.AddSingleton<IJobFactory, SingletonJobFactory>();
+            services.AddSingleton<IJobFactory, MetricsManagerJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
-            // добавляем нашу задачу
             services.AddSingleton<CpuMetricJob>();
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(CpuMetricJob),
-                cronExpression: "0/2 * * * * ?")); // запускать каждые 2 секунды
+                cronExpression: "0/2 * * * * ?"));
             services.AddSingleton<DotNetMetricJob>();
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(DotNetMetricJob),

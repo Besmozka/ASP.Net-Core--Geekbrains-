@@ -30,9 +30,9 @@ namespace MetricsManager.Controllers
         {
             GetAgentsListFromRepository();
             _logger.LogInformation($"RegisterAgent - Agent Info: {agentInfo}");
-            if (_agents.Agents.Exists(agent => agent.AgentAddress == agentInfo.AgentAddress))
+            if (_agents.Agents.Exists(item => item.AgentAddress == agentInfo.AgentAddress))
             {
-                return BadRequest("Такой агент существует");
+                return BadRequest($"Агент с таким адресом({agentInfo.AgentAddress}) существует");
             }
             _repository.Create(agentInfo);
             return Ok();

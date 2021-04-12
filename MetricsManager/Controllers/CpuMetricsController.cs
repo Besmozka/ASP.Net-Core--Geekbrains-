@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using Microsoft.Extensions.Logging;
 using MetricsManager.DAL;
-using System.Collections.Generic;
-using MetricsManager.Responses;
 using AutoMapper;
 using MetricsManager.DAL.Interfaces;
-using MetricsManager.DAL.Repositories;
+using System.Collections.Generic;
+using MetricsManager.Responses;
 using MetricsManager.Responses.Models;
 
 namespace MetricsManager.Controllers

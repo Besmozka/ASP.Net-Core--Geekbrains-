@@ -20,12 +20,22 @@ namespace MetricsManager.DAL.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                connection.Execute("INSERT INTO networkmetrics(value, time) VALUES(@value, @time)",
+                connection.Execute("INSERT INTO networkmetrics(agentid, value, time) VALUES(@agentid, @value, @time)",
                     new
                     {
+                        agentid = item.AgentId,
                         value = item.Value,
                         time = item.Time.ToUnixTimeSeconds()
                     });
+            }
+        }
+        public DateTimeOffset GetLastMetricTime(int agentId)
+        {
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                return DateTimeOffset.FromUnixTimeSeconds(connection
+                    .Query<NetworkMetric>("SELECT * FROM networkmetrics")
+                    .Max(item => Convert.ToInt64(item.Time)));
             }
         }
 
@@ -33,7 +43,7 @@ namespace MetricsManager.DAL.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.Query<NetworkMetric>("SELECT Id, Time, Value FROM networkmetrics WHERE Id==@id Time>=@fromTime AND Time<=@toTime",
+                return connection.Query<NetworkMetric>("SELECT Id, AgentId, Time, Value FROM networkmetrics WHERE Id==@id Time>=@fromTime AND Time<=@toTime",
                     new { id = agentId, fromTime = fromTime.ToUnixTimeSeconds(), toTime = toTime.ToUnixTimeSeconds() }).ToList();
             }
         }
@@ -42,7 +52,7 @@ namespace MetricsManager.DAL.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.Query<NetworkMetric>("SELECT Id, Time, Value FROM networkmetrics WHERE Time>=@fromTime AND Time<=@toTime",
+                return connection.Query<NetworkMetric>("SELECT Id, AgentId, Time, Value FROM networkmetrics WHERE Time>=@fromTime AND Time<=@toTime",
                     new { fromTime = fromTime.ToUnixTimeSeconds(), toTime = toTime.ToUnixTimeSeconds() }).ToList();
             }
         }

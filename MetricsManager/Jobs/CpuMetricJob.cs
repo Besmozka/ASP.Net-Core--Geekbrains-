@@ -1,38 +1,55 @@
 ﻿using MetricsManager.DAL;
 using Quartz;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using MetricsManager.DAL.Interfaces;
-using MetricsManager.DAL.Repositories;
+using Microsoft.Extensions.Logging;
+using MetricsManager.Requests;
+using System.Collections.Generic;
+using MetricsManager.Client;
 
 namespace MetricsManager.Jobs
 {
     public class CpuMetricJob : IJob
     {
-        private IMetricsRepository<CpuMetric> _repository;
+        private readonly IMetricsRepository<CpuMetric> _repository;
 
-        // счетчик для метрики CPU
-        private PerformanceCounter _cpuCounter;
+        private readonly IAgentsRepository _agentsRepository;
 
-        public CpuMetricJob(IMetricsRepository<CpuMetric> repository)
+        private readonly IMetricsAgentClient _metricsAgentClient;
+
+        private readonly ILogger<CpuMetricJob> _logger;
+
+        public CpuMetricJob(IMetricsRepository<CpuMetric> repository, IAgentsRepository agentsRepository, IMetricsAgentClient metricsAgentClient,
+            ILogger<CpuMetricJob> logger)
         {
             _repository = repository;
-            _cpuCounter = new PerformanceCounter("Процессор", "% загруженности процессора", "_Total");
+            _agentsRepository = agentsRepository;
+            _metricsAgentClient = metricsAgentClient;
+            _logger = logger;
+            _logger.LogInformation("Nlog встроен в CpuMetricJob");
+
         }
 
         public Task Execute(IJobExecutionContext context)
         {
-            // получаем значение занятости CPU
-            var cpuUsageInPercents = Convert.ToInt32(_cpuCounter.NextValue());
+            List<AgentInfo> agents = _agentsRepository.GetAgents();
+            foreach (var agent in agents)
+            {
+                DateTimeOffset timeOfLastRequest = _repository.GetLastMetricTime(agent.AgentId);
 
-            // узнаем когда мы сняли значение метрики.
-            var time = DateTimeOffset.UtcNow;
+                var metricsResponse = _metricsAgentClient.GetAllCpuMetrics(new GetAllCpuMetricsApiRequest
+                {
+                    AgentAddress = agent.AgentAddress,
+                    FromTime = timeOfLastRequest,
+                    ToTime = DateTimeOffset.UtcNow,
+                });
 
-            // теперь можно записать что-то при помощи репозитория
-
-            _repository.Create(new CpuMetric { Time = time, Value = cpuUsageInPercents });
-
+                foreach (var metric in metricsResponse.Metrics)
+                {
+                    _repository.Create(metric);
+                }
+            }
             return Task.CompletedTask;
         }
     }

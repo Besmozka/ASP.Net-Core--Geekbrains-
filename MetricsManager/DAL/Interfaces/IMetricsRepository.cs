@@ -9,6 +9,7 @@ namespace MetricsManager.DAL.Interfaces
 
         List<T> GetClusterMetricsByTimePeriod(DateTimeOffset fromTime, DateTimeOffset toTime);
 
+        DateTimeOffset GetLastMetricTime(int agentId);
         void Create(T item);
         
     }
