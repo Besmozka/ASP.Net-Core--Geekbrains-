@@ -4,7 +4,8 @@ using Quartz.Spi;
 using System;
 
 namespace MetricsManager.Jobs
-{    public class MetricsManagerJobFactory : IJobFactory
+{
+    public class MetricsManagerJobFactory : IJobFactory
     {
         private readonly IServiceProvider _serviceProvider;
         public MetricsManagerJobFactory(IServiceProvider serviceProvider)

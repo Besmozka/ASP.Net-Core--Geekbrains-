@@ -1,15 +1,16 @@
-﻿using MetricsManager.DAL;
+﻿using MetricsManager.Client;
+using MetricsManager.DAL;
+using MetricsManager.DAL.Interfaces;
+using MetricsManager.Requests;
+using Microsoft.Extensions.Logging;
 using Quartz;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MetricsManager.Client;
-using MetricsManager.DAL.Interfaces;
-using MetricsManager.Requests;
-using Microsoft.Extensions.Logging;
 
 namespace MetricsManager.Jobs
 {
+    [DisallowConcurrentExecution]
     public class HddMetricJob : IJob
     {
         private readonly IMetricsRepository<HddMetric> _repository;

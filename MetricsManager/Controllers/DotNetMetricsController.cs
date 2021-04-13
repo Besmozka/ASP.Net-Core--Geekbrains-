@@ -1,13 +1,12 @@
-﻿using Core;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
 using MetricsManager.DAL;
-using System.Collections.Generic;
-using AutoMapper;
 using MetricsManager.DAL.Repositories;
 using MetricsManager.Responses;
 using MetricsManager.Responses.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 
 namespace MetricsManager.Controllers
 {
@@ -28,7 +27,7 @@ namespace MetricsManager.Controllers
             _repository = repository;
             _mapper = mapper;
         }
-           
+
         [HttpGet("errors-count/agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetDotNetMetricsFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {

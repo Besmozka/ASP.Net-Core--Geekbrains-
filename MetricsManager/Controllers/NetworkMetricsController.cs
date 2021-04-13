@@ -1,13 +1,12 @@
-﻿using Core;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
 using MetricsManager.DAL;
-using System.Collections.Generic;
-using AutoMapper;
 using MetricsManager.DAL.Repositories;
 using MetricsManager.Responses;
 using MetricsManager.Responses.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 
 namespace MetricsManager.Controllers
 {

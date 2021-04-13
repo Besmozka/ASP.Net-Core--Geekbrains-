@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Dapper;
+using MetricsManager.DAL.Handlers;
+using MetricsManager.DAL.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
-using Dapper;
-using MetricsManager.DAL.Handlers;
-using MetricsManager.DAL.Interfaces;
 
 namespace MetricsManager.DAL.Repositories
 {
@@ -32,7 +32,7 @@ namespace MetricsManager.DAL.Repositories
 
         public DateTimeOffset GetLastMetricTime(int agentId)
         {
-            using (var connection  = new SQLiteConnection(ConnectionString))
+            using (var connection = new SQLiteConnection(ConnectionString))
             {
                 var metrics = connection.Query<CpuMetric>("SELECT * FROM cpumetrics").ToList();
                 if (metrics.Count != 0)

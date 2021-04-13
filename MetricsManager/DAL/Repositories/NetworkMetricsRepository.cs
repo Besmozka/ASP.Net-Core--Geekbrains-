@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Dapper;
+using MetricsManager.DAL.Handlers;
+using MetricsManager.DAL.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
-using Dapper;
-using MetricsManager.DAL.Handlers;
-using MetricsManager.DAL.Interfaces;
 
 namespace MetricsManager.DAL.Repositories
 {

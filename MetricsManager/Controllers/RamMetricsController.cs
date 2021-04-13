@@ -1,13 +1,13 @@
-﻿using Core;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
+using Core;
 using MetricsManager.DAL;
-using System.Collections.Generic;
-using AutoMapper;
 using MetricsManager.DAL.Repositories;
 using MetricsManager.Responses;
 using MetricsManager.Responses.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 
 namespace MetricsManager.Controllers
 {
@@ -60,7 +60,11 @@ namespace MetricsManager.Controllers
             {
                 Metrics = new List<RamMetricDto>()
             };
-            response.Metrics.Add(_mapper.Map<RamMetricDto>(metric));
+
+            int listIndexOfPercentile = metrics.Count * (int)percentile / 100;
+
+            response.Metrics.Add(_mapper.Map<RamMetricDto>(metrics[listIndexOfPercentile]));
+
             return Ok(response);
         }
 
@@ -96,7 +100,11 @@ namespace MetricsManager.Controllers
             {
                 Metrics = new List<RamMetricDto>()
             };
-            response.Metrics.Add(_mapper.Map<RamMetricDto>(metric));
+
+            int listIndexOfPercentile = metrics.Count * (int)percentile / 100;
+
+            response.Metrics.Add(_mapper.Map<RamMetricDto>(metrics[listIndexOfPercentile]));
+
             return Ok(response);
         }
     }

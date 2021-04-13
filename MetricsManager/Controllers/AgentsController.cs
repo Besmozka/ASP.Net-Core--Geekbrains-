@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using MetricsManager.DAL;
+using MetricsManager.DAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using MetricsManager.DAL;
-using MetricsManager.DAL.Interfaces;
-using MetricsManager.DAL.Repositories;
 
 namespace MetricsManager.Controllers
 {

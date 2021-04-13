@@ -1,15 +1,16 @@
-﻿using MetricsManager.DAL;
+﻿using MetricsManager.Client;
+using MetricsManager.DAL;
+using MetricsManager.DAL.Interfaces;
+using MetricsManager.Requests;
+using Microsoft.Extensions.Logging;
 using Quartz;
 using System;
-using System.Threading.Tasks;
-using MetricsManager.DAL.Interfaces;
-using Microsoft.Extensions.Logging;
-using MetricsManager.Requests;
 using System.Collections.Generic;
-using MetricsManager.Client;
+using System.Threading.Tasks;
 
 namespace MetricsManager.Jobs
 {
+    [DisallowConcurrentExecution] //аттрибут указывающий на то, что пока экземпляр этой Job'ы не отработает, следующий не запустится
     public class CpuMetricJob : IJob
     {
         private readonly IMetricsRepository<CpuMetric> _repository;

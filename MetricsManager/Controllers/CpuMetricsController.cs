@@ -1,13 +1,13 @@
-﻿using Core;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
+using Core;
 using MetricsManager.DAL;
-using AutoMapper;
 using MetricsManager.DAL.Interfaces;
-using System.Collections.Generic;
 using MetricsManager.Responses;
 using MetricsManager.Responses.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 
 namespace MetricsManager.Controllers
 {
@@ -59,7 +59,11 @@ namespace MetricsManager.Controllers
             {
                 Metrics = new List<CpuMetricDto>()
             };
-            response.Metrics.Add(_mapper.Map<CpuMetricDto>(metric)); // вычислить персентиль и передать в ответ
+
+            int listIndexOfPercentile = metrics.Count * (int)percentile / 100;
+
+            response.Metrics.Add(_mapper.Map<CpuMetricDto>(metrics[listIndexOfPercentile]));
+
             return Ok(response);
         }
 
@@ -95,7 +99,10 @@ namespace MetricsManager.Controllers
             {
                 Metrics = new List<CpuMetricDto>()
             };
-            response.Metrics.Add(_mapper.Map<CpuMetricDto>(metric)); // вычислить персентиль и передать в ответ
+            int listIndexOfPercentile = metrics.Count * (int)percentile / 100;
+
+            response.Metrics.Add(_mapper.Map<CpuMetricDto>(metrics[listIndexOfPercentile]));
+
             return Ok(response);
         }
 

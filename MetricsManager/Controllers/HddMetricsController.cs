@@ -1,13 +1,13 @@
-﻿using Core;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
+using Core;
 using MetricsManager.DAL;
-using System.Collections.Generic;
-using AutoMapper;
 using MetricsManager.DAL.Repositories;
 using MetricsManager.Responses;
 using MetricsManager.Responses.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 
 namespace MetricsManager.Controllers
 {
@@ -26,9 +26,9 @@ namespace MetricsManager.Controllers
             _logger = logger;
             _logger.LogDebug(1, "NLog встроен в HddMetricsController");
             _repository = repository;
-            _mapper = mapper;                                                                       
-        }       
-                
+            _mapper = mapper;
+        }
+
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetHddMetricsFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
@@ -49,7 +49,7 @@ namespace MetricsManager.Controllers
         }
 
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}/percentiles/{percentile}")]
-        public IActionResult GetHddMetricsByPercentileFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime, 
+        public IActionResult GetHddMetricsByPercentileFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime,
             [FromRoute] Percentile percentile)
         {
             _logger.LogInformation($"GetHddMetricsByPercentileFromAgent - Agent ID: {agentId}; From time: {fromTime}; To time: {toTime};" +
@@ -61,7 +61,11 @@ namespace MetricsManager.Controllers
             {
                 Metrics = new List<HddMetricDto>()
             };
-            response.Metrics.Add(_mapper.Map<HddMetricDto>(metric));
+
+            int listIndexOfPercentile = metrics.Count * (int)percentile / 100;
+
+            response.Metrics.Add(_mapper.Map<HddMetricDto>(metrics[listIndexOfPercentile]));
+
             return Ok(response);
         }
 
@@ -82,7 +86,6 @@ namespace MetricsManager.Controllers
                 response.Metrics.Add(_mapper.Map<HddMetricDto>(metric));
             }
             return Ok(response);
-            return Ok();
         }
 
         [HttpGet("cluster/from/{fromTime}/to/{toTime}/percentiles/{percentile}")]
@@ -98,7 +101,11 @@ namespace MetricsManager.Controllers
             {
                 Metrics = new List<HddMetricDto>()
             };
-            response.Metrics.Add(_mapper.Map<HddMetricDto>(metric));
+
+            int listIndexOfPercentile = metrics.Count * (int)percentile / 100;
+
+            response.Metrics.Add(_mapper.Map<HddMetricDto>(metrics[listIndexOfPercentile]));
+
             return Ok(response);
         }
     }

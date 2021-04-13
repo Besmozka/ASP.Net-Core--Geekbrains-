@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using MetricsManager.Jobs;
+﻿using MetricsManager.Jobs;
 using Microsoft.Extensions.Hosting;
 using Quartz;
 using Quartz.Spi;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MetricsManager.Services
 {

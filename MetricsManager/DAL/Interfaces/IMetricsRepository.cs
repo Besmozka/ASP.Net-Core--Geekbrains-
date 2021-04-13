@@ -11,7 +11,7 @@ namespace MetricsManager.DAL.Interfaces
 
         DateTimeOffset GetLastMetricTime(int agentId);
         void Create(T item);
-        
+
     }
 
 }
