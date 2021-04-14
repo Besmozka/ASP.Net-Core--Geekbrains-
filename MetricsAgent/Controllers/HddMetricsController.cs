@@ -1,7 +1,10 @@
-﻿using MetricsAgent;
+﻿using AutoMapper;
+using MetricsAgent;
 using MetricsAgent.DAL;
+using MetricsAgent.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 
 namespace MetricsManager.Controllers
@@ -13,26 +16,32 @@ namespace MetricsManager.Controllers
         private IHddMetricsRepository _repository;
 
         private readonly ILogger<HddMetricsController> _logger;
-        public HddMetricsController(ILogger<HddMetricsController> logger, IHddMetricsRepository repository)
+
+        private readonly IMapper _mapper;
+        public HddMetricsController(ILogger<HddMetricsController> logger, IHddMetricsRepository repository, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
             _logger.LogDebug("Nlog встроен в HddMetricsController");
+            _mapper = mapper;
         }
 
-        [HttpGet("hdd/left")]
+        [HttpGet("left")]
         public IActionResult GetHddSizeLeft()
         {
             _logger.LogInformation($"GetHddSizeLeft - Left:");
-            return Ok();
-        }
+            List<HddMetric> metrics = _repository.GetByTimePeriod(DateTimeOffset.MinValue, DateTimeOffset.UtcNow);
 
-        [HttpGet("all")]
-        public IActionResult GetAll()
-        {
-            _logger.LogInformation("Get all");
-            List<HddMetric> metrics = _repository.GetAll();
-            return Ok(metrics);
+            var response = new AllMetricsResponse<HddMetricDto>()
+            {
+                Metrics = new List<HddMetricDto>()
+            };
+
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(_mapper.Map<HddMetricDto>(metric));
+            }
+            return Ok(response);
         }
     }
 }

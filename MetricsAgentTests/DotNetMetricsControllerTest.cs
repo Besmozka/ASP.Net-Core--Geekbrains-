@@ -1,3 +1,4 @@
+using AutoMapper;
 using MetricsAgent;
 using MetricsAgent.DAL;
 using MetricsManager.Controllers;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace MetricsAgentTests
@@ -17,29 +19,29 @@ namespace MetricsAgentTests
 
         private Mock<IDotNetMetricsRepository> _mockRepository;
 
+        private Mock<IMapper> _mockMapper;
+
+        private Random _random;
         public DotNetControllerUnitTests()
         {
             _mockLogger = new Mock<ILogger<DotNetMetricsController>>();
             _mockRepository = new Mock<IDotNetMetricsRepository>();
-            _controller = new DotNetMetricsController(_mockLogger.Object, _mockRepository.Object);
+            _mockMapper = new Mock<IMapper>();
+            _controller = new DotNetMetricsController(_mockLogger.Object, _mockRepository.Object, _mockMapper.Object);
         }
 
         [Fact]
         public void GetErrorsTimeInterval_ReturnsOk()
         {
-            //ArrangeRandom 
-            _mockRepository.Setup(repository => repository.Create(It.IsAny<DotNetMetric>())).Verifiable();
+            _mockRepository.Setup(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()))
+                .Returns(new List<DotNetMetric>()); ;
+            var fromTime = DateTimeOffset.FromUnixTimeSeconds(_random.Next(50));
+            var toTime = DateTimeOffset.FromUnixTimeSeconds(_random.Next(50, 100));
 
-            Random random = new Random();
-            var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50));
-            var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50, 100));
-
-            //Act
             var result = _controller.GetDotNetErrorsTimeInterval(fromTime, toTime);
 
-
-            // Assert
-            _mockRepository.Verify(repository => repository.Create(It.IsAny<DotNetMetric>()), Times.Exactly(2));
+            _mockRepository.Verify(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()),
+                Times.Once());
             _ = Assert.IsAssignableFrom<IActionResult>(result);
         }
     }
