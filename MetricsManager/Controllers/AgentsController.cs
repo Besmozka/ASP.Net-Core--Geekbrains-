@@ -2,6 +2,7 @@
 using MetricsManager.DAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace MetricsManager.Controllers
 {
@@ -40,9 +41,16 @@ namespace MetricsManager.Controllers
         public IActionResult EnableAgentById([FromRoute] int agentId)
         {
             _logger.LogInformation($"EnableAgentById - Agent ID: {agentId}");
-            return Ok(_repository.GetAgents());
+            return Ok();
         }
 
+        [HttpDelete("delete/{agentAddress}")]
+        public IActionResult DeleteAgent([FromRoute] string agentAddress)
+        {
+            _logger.LogInformation($"Delete agent - Agent Address: {agentAddress}");
+            _repository.Delete(agentAddress);
+            return Ok();
+        }
         [HttpPut("disable/{agentId}")]
         public IActionResult DisableAgentById([FromRoute] int agentId)
         {

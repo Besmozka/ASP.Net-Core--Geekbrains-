@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MetricsManager.DAL;
+using MetricsManager.DAL.Interfaces;
 using MetricsManager.DAL.Repositories;
 using MetricsManager.Responses;
 using MetricsManager.Responses.Models;
@@ -16,11 +17,11 @@ namespace MetricsManager.Controllers
     {
         private readonly ILogger<DotNetMetricsController> _logger;
 
-        private readonly DotNetMetricsRepository _repository;
+        private readonly IMetricsRepository<DotNetMetric> _repository;
 
         private readonly IMapper _mapper;
 
-        public DotNetMetricsController(ILogger<DotNetMetricsController> logger, DotNetMetricsRepository repository, IMapper mapper)
+        public DotNetMetricsController(ILogger<DotNetMetricsController> logger, IMetricsRepository<DotNetMetric> repository, IMapper mapper)
         {
             _logger = logger;
             _logger.LogDebug(1, "NLog встроен в DotNetMetricsController");

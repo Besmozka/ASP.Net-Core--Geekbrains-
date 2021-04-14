@@ -20,10 +20,16 @@ namespace MetricsManager.DAL.Repositories
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Execute("INSERT INTO agentslist(AgentAddress) VALUES(@address)",
-                                        new
-                                        {
-                                            address = item.AgentAddress.ToString()
-                                        });
+                                        new { address = item.AgentAddress.ToString() });
+            }
+        }
+
+        public void Delete(string agentAddress)
+        {
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Execute("DELETE FROM agentslist WHERE AgentAddress = @agentAddress",
+                    new { agentAddress = agentAddress });
             }
         }
         public List<AgentInfo> GetAgents()

@@ -1,12 +1,9 @@
 using AutoMapper;
-using MetricsAgent;
+using MetricsAgent.Controllers;
 using MetricsAgent.DAL;
-using MetricsManager.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
 using Xunit;
 
 namespace MetricsAgentTests

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MetricsManager.DAL;
+using MetricsManager.DAL.Interfaces;
 using MetricsManager.DAL.Repositories;
 using MetricsManager.Responses;
 using MetricsManager.Responses.Models;
@@ -16,11 +17,11 @@ namespace MetricsManager.Controllers
     {
         private readonly ILogger<NetworkMetricsController> _logger;
 
-        private readonly NetworkMetricsRepository _repository;
+        private readonly IMetricsRepository<NetworkMetric> _repository;
 
         private readonly IMapper _mapper;
 
-        public NetworkMetricsController(ILogger<NetworkMetricsController> logger, NetworkMetricsRepository repository, IMapper mapper)
+        public NetworkMetricsController(ILogger<NetworkMetricsController> logger, IMetricsRepository<NetworkMetric> repository, IMapper mapper)
         {
             _logger = logger;
             _logger.LogDebug("Nlog встроен в NetworkMetricsController");

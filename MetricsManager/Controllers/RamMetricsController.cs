@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core;
 using MetricsManager.DAL;
+using MetricsManager.DAL.Interfaces;
 using MetricsManager.DAL.Repositories;
 using MetricsManager.Responses;
 using MetricsManager.Responses.Models;
@@ -17,10 +18,10 @@ namespace MetricsManager.Controllers
     {
         private readonly ILogger<RamMetricsController> _logger;
 
-        private readonly RamMetricsRepository _repository;
+        private readonly IMetricsRepository<RamMetric> _repository;
 
         private readonly IMapper _mapper;
-        public RamMetricsController(ILogger<RamMetricsController> logger, RamMetricsRepository repository, IMapper mapper)
+        public RamMetricsController(ILogger<RamMetricsController> logger, IMetricsRepository<RamMetric> repository, IMapper mapper)
         {
             _logger = logger;
             _logger.LogDebug("Nlog встроен в RamMetricsController");

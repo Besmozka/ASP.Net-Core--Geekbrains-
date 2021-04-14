@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core;
 using MetricsManager.DAL;
+using MetricsManager.DAL.Interfaces;
 using MetricsManager.DAL.Repositories;
 using MetricsManager.Responses;
 using MetricsManager.Responses.Models;
@@ -17,11 +18,11 @@ namespace MetricsManager.Controllers
     {
         private readonly ILogger<HddMetricsController> _logger;
 
-        private readonly HddMetricsRepository _repository;
+        private readonly IMetricsRepository<HddMetric>  _repository;
 
         private readonly IMapper _mapper;
 
-        public HddMetricsController(ILogger<HddMetricsController> logger, HddMetricsRepository repository, IMapper mapper)
+        public HddMetricsController(ILogger<HddMetricsController> logger, IMetricsRepository<HddMetric> repository, IMapper mapper)
         {
             _logger = logger;
             _logger.LogDebug(1, "NLog встроен в HddMetricsController");

@@ -6,6 +6,7 @@ namespace MetricsManager.DAL.Interfaces
     {
         void Create(AgentInfo item);
 
+        void Delete(string agentAddress);
         List<AgentInfo> GetAgents();
     }
 

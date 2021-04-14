@@ -46,6 +46,7 @@ namespace MetricsManager.DAL.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
+                var h = connection.Query<CpuMetric>("SELECT * FROM rammetrics");
                 return connection.Query<RamMetric>("SELECT Id, AgentId, Time, Value FROM rammetrics WHERE AgentId==@agentId AND Time>=@fromTime AND Time<=@toTime",
                     new { agentId = agentId, fromTime = fromTime.ToUnixTimeSeconds(), toTime = toTime.ToUnixTimeSeconds() }).ToList();
             }

@@ -21,9 +21,7 @@ namespace MetricsManager.Client
 
         public AllMetricsResponse<HddMetric> GetAllHddMetrics(GetAllHddMetricsApiRequest request)
         {
-            var fromParameter = request.FromTime.ToLocalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-            var toParameter = request.ToTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}api/metrics/hdd/from/{fromParameter}/to/{toParameter}");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}api/metrics/hdd/left");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
@@ -44,9 +42,7 @@ namespace MetricsManager.Client
 
         public AllMetricsResponse<RamMetric> GetAllRamMetrics(GetAllRamMetricsApiRequest request)
         {
-            var fromParameter = request.FromTime.ToLocalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-            var toParameter = request.ToTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}api/metrics/ram/from/{fromParameter}/to/{toParameter}");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}api/metrics/ram/available");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
@@ -115,7 +111,7 @@ namespace MetricsManager.Client
         {
             var fromParameter = request.FromTime.ToLocalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
             var toParameter = request.ToTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}api/metrics/dotnet/from/{fromParameter}/to/{toParameter}");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.AgentAddress}api/metrics/dotnet/errors-count/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;

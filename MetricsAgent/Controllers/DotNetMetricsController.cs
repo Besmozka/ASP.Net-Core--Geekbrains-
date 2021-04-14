@@ -25,6 +25,7 @@ namespace MetricsAgent.Controllers
             _logger.LogDebug("Nlog встроен в DotNetMetricsController");
             _mapper = mapper;
         }
+
         [HttpGet("errors-count/from/{fromTime}/to/{toTime}")]
         public IActionResult GetDotNetErrorsTimeInterval([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {

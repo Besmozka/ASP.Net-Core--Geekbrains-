@@ -1,7 +1,7 @@
 using AutoMapper;
 using MetricsAgent;
+using MetricsAgent.Controllers;
 using MetricsAgent.DAL;
-using MetricsManager.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;

@@ -1,7 +1,9 @@
+using AutoFixture;
 using AutoMapper;
 using MetricsAgent;
+using MetricsAgent.Controllers;
 using MetricsAgent.DAL;
-using MetricsManager.Controllers;
+using MetricsAgent.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -18,22 +20,37 @@ namespace MetricsAgentTests
         private Mock<ILogger<HddMetricsController>> _mockLogger;
 
         private Mock<IHddMetricsRepository> _mockRepository;
-
-        private Mock<IMapper> _mockMapper;
         public HddControllerUnitTests()
         {
             _mockLogger = new Mock<ILogger<HddMetricsController>>();
             _mockRepository = new Mock<IHddMetricsRepository>();
-            _mockMapper = new Mock<IMapper>();
-            _controller = new HddMetricsController(_mockLogger.Object, _mockRepository.Object, _mockMapper.Object);
+            var mapperConfiguration = new MapperConfiguration(mp => mp.CreateMap<HddMetric, HddMetricDto>());
+            var mapper = mapperConfiguration.CreateMapper();
+            _controller = new HddMetricsController(_mockLogger.Object, _mockRepository.Object, mapper);
         }
 
         [Fact]
         public void GetSizeLeft_ReturnsOk()
         {
-            var result = _controller.GetHddSizeLeft();
+            Fixture fixture = new Fixture();
+            var returnList = fixture.Create<List<HddMetric>>();
 
-            _ = Assert.IsAssignableFrom<IActionResult>(result);
+            _mockRepository.Setup(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()))
+                .Returns(returnList);
+
+            var resultGetSizeLeft = (OkObjectResult)_controller.GetHddSizeLeft();
+            var returnListDto = (AllMetricsResponse<HddMetric>)resultGetSizeLeft.Value;
+
+            _mockRepository.Verify(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()), 
+                Times.Once());
+            _ = Assert.IsAssignableFrom<IActionResult>(resultGetSizeLeft);
+
+            for (int i = 0; i < returnList.Count; i++)
+            {
+                Assert.Equal(returnList[i].Id, returnListDto.Metrics[i].Id);
+                Assert.Equal(returnList[i].Time, returnListDto.Metrics[i].Time);
+                Assert.Equal(returnList[i].Value, returnListDto.Metrics[i].Value);
+            }
         }
     }
 }
