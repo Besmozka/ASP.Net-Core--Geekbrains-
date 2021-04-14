@@ -17,17 +17,23 @@ namespace MetricsAgentTests
     {
         private DotNetMetricsController _controller;
 
+
         private Mock<ILogger<DotNetMetricsController>> _mockLogger;
 
+
         private Mock<IDotNetMetricsRepository> _mockRepository;
+
+
         public DotNetControllerUnitTests()
         {
             _mockLogger = new Mock<ILogger<DotNetMetricsController>>();
             _mockRepository = new Mock<IDotNetMetricsRepository>();
-            var mapperConfiguration = new MapperConfiguration(mp => mp.CreateMap<DotNetMetric, DotNetMetricDto>());
-            var mapper = mapperConfiguration.CreateMapper();
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(mp =>
+                mp.CreateMap<DotNetMetric, DotNetMetricDto>());
+            IMapper mapper = mapperConfiguration.CreateMapper();
             _controller = new DotNetMetricsController(_mockLogger.Object, _mockRepository.Object, mapper);
         }
+
 
         [Fact]
         public void GetErrorsTimeInterval_ReturnsOk()
@@ -39,11 +45,11 @@ namespace MetricsAgentTests
                 .Returns(returnList);
 
             Random random = new Random();
-            var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50));
-            var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50, 100));
+            var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(500));
+            var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(500, 1000));
 
             var resultGetDotNetErrorsTimeInterval = (OkObjectResult)_controller.GetDotNetErrorsTimeInterval(fromTime, toTime);
-            var returnListDto = (AllMetricsResponse<CpuMetricDto>)resultGetDotNetErrorsTimeInterval.Value;
+            var returnListDto = (AllMetricsResponse<DotNetMetricDto>)resultGetDotNetErrorsTimeInterval.Value;
 
             _mockRepository.Verify(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()),
                 Times.Once());

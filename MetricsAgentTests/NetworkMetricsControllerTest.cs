@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
+using AutoFixture;
+using MetricsAgent.Responses;
 using Xunit;
 
 namespace MetricsAgentTests
@@ -15,37 +17,50 @@ namespace MetricsAgentTests
     {
         private NetworkMetricsController _controller;
 
+
         private Mock<ILogger<NetworkMetricsController>> _mockLogger;
+
 
         private Mock<INetworkMetricsRepository> _mockRepository;
 
-        private Mock<IMapper> _mockMapper;
 
         public NetworkControllerUnitTests()
         {
             _mockLogger = new Mock<ILogger<NetworkMetricsController>>();
             _mockRepository = new Mock<INetworkMetricsRepository>();
-            _mockMapper = new Mock<IMapper>();
-            _controller = new NetworkMetricsController(_mockLogger.Object, _mockRepository.Object, _mockMapper.Object);
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(mp =>
+                mp.CreateMap<NetworkMetric, NetworkMetricDto>());
+            IMapper mapper = mapperConfiguration.CreateMapper();
+            _controller = new NetworkMetricsController(_mockLogger.Object, _mockRepository.Object, mapper);
         }
+
 
         [Fact]
         public void GetMetricsTimeInterval_ReturnsOk()
         {
-            //Arrange
+            Fixture fixture = new Fixture();
+            var returnList = fixture.Create<List<NetworkMetric>>();
+
             _mockRepository.Setup(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()))
-                .Returns(new List<NetworkMetric>()); ;
+                .Returns(returnList);
+
             Random random = new Random();
-            var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50));
-            var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50, 100));
+            var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(500));
+            var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(500, 1000));
 
-            //Act
-            var result = _controller.GetNetworkMetricsTimeInterval(fromTime, toTime);
+            var resultGetSizeLeft = (OkObjectResult)_controller.GetNetworkMetricsTimeInterval(fromTime,toTime);
+            var returnListDto = (AllMetricsResponse<NetworkMetricDto>)resultGetSizeLeft.Value;
 
-            // Assert
             _mockRepository.Verify(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()),
                 Times.Once());
-            _ = Assert.IsAssignableFrom<IActionResult>(result);
+            _ = Assert.IsAssignableFrom<IActionResult>(resultGetSizeLeft);
+
+            for (int i = 0; i < returnList.Count; i++)
+            {
+                Assert.Equal(returnList[i].Id, returnListDto.Metrics[i].Id);
+                Assert.Equal(returnList[i].Time, returnListDto.Metrics[i].Time);
+                Assert.Equal(returnList[i].Value, returnListDto.Metrics[i].Value);
+            }
         }
     }
 }

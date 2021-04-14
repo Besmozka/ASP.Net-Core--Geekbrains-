@@ -18,17 +18,23 @@ namespace MetricsAgentTests
     {
         private CpuMetricsController _controller;
 
+
         private Mock<ILogger<CpuMetricsController>> _mockLogger;
 
+
         private Mock<ICpuMetricsRepository> _mockRepository;
+
+
         public CpuMetricsControllerUnitTests()
         {
             _mockLogger = new Mock<ILogger<CpuMetricsController>>();
             _mockRepository = new Mock<ICpuMetricsRepository>();
-            var mapperConfiguration = new MapperConfiguration(mp => mp.CreateMap<CpuMetric, CpuMetricDto>());
-            var mapper = mapperConfiguration.CreateMapper();
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(mp =>
+                mp.CreateMap<CpuMetric, CpuMetricDto>());
+            IMapper mapper = mapperConfiguration.CreateMapper();
             _controller = new CpuMetricsController(_mockLogger.Object, _mockRepository.Object, mapper);
         }
+
 
         [Fact]
         public void Call_GetCpuMetricsTimeInterval_From_Controller()
@@ -40,8 +46,8 @@ namespace MetricsAgentTests
                 .Returns(returnList);
 
             Random random = new Random();
-            var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50));
-            var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(50, 100));
+            var fromTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(500));
+            var toTime = DateTimeOffset.FromUnixTimeSeconds(random.Next(500, 1000));
 
             var resultGetCpuMetricsTimeInterval = (OkObjectResult)_controller.GetCpuMetricsTimeInterval(fromTime, toTime);
             var returnListDto = (AllMetricsResponse<CpuMetricDto>)resultGetCpuMetricsTimeInterval.Value;

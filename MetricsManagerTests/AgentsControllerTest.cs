@@ -2,8 +2,10 @@ using MetricsManager.Controllers;
 using MetricsManager;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using Xunit;
 using System.Text;
+using AutoFixture;
 using Moq;
 using Microsoft.Extensions.Logging;
 using MetricsManager.DAL;
@@ -19,71 +21,68 @@ namespace MetricsManagerTests
 
         private Mock<IAgentsRepository> _mockRepository;
 
-        private Mock<AgentsList> _mockAgentsList;
-
         private int _maxAgentsCount = 100;
+
+        private readonly Random _random = new Random();
+
+        private UriBuilder _uriBuilder = new UriBuilder();
+
+        private Fixture _fixture = new Fixture();
+
+
         public AgentsControllerUnitTests()
         {
+            var agentsList = _fixture.Create<AgentsList>();
             _mockLogger = new Mock<ILogger<AgentsController>>();
-            _mockAgentsList = new Mock<AgentsList>();
             _mockRepository = new Mock<IAgentsRepository>();
-            _controller = new AgentsController(_mockLogger.Object, _mockRepository.Object, _mockAgentsList.Object);
+            _controller = new AgentsController(_mockLogger.Object, _mockRepository.Object, agentsList);
         }
+
 
         [Fact]
         public void AgentRegister_ReturnsOk()
         {
-            //Arrange
-            Random random = new Random();
-            UriBuilder uriBuilder = new UriBuilder();
-            AgentInfo agentInfo = new AgentInfo(random.Next(_maxAgentsCount), uriBuilder.Uri);
+            AgentInfo agentInfo = new AgentInfo
+            {
+                AgentId = _random.Next(_maxAgentsCount), 
+                AgentAddress = _uriBuilder.Uri
 
-            //Act
-            var result = _controller.RegisterAgent(agentInfo);
+            };
 
-            // Assert
-            // проверяем заглушку на то, что пока работал контроллер
-            // действительно вызвался метод Create репозитория с нужным типом объекта в параметре
-            _ = Assert.IsAssignableFrom<IActionResult>(result);
+            _mockRepository.Setup(repository => repository.Create(It.IsAny<AgentInfo>())).Verifiable();
+            var resultAgentRegister = _controller.RegisterAgent(agentInfo);
+
+            _mockRepository.Verify(repository => repository.Create(It.IsAny<AgentInfo>()), Times.Once);
+
+            _ = Assert.IsAssignableFrom<IActionResult>(resultAgentRegister);
         }
 
+
         [Fact]
-        public void EnableAgent_ReturnsOk()
+        public void DeleteAgent_ReturnsOk()
         {
-            //Arrange
-            Random random = new Random();
+            _mockRepository.Setup(repository =>repository.Delete(It.IsAny<String>())).Verifiable();
 
-            //Act
-            var result = _controller.EnableAgentById(random.Next(_maxAgentsCount));
+            var resultDeleteAgent = _controller.DeleteAgent(_uriBuilder.Uri.ToString());
 
-            // Assert
-            _ = Assert.IsAssignableFrom<IActionResult>(result);
+            _mockRepository.Verify(repository => repository.Delete(It.IsAny<String>()), Times.Once);
+
+            _ = Assert.IsAssignableFrom<IActionResult>(resultDeleteAgent);
         }
 
-        [Fact]
-        public void DisableAgent_ReturnsOk()
-        {
-            //Arrange
-            Random random = new Random();
-
-            //Act
-            var result = _controller.DisableAgentById(random.Next(_maxAgentsCount));
-
-            // Assert
-            _ = Assert.IsAssignableFrom<IActionResult>(result);
-        }
 
         [Fact]
-        public void NumberOfAgents_ReturnsOk()
+        public void GetNumberOfAgents_ReturnsOk()
         {
-            //Arrange
-            Random random = new Random();
+            var listAgents = _fixture.Create<List<AgentInfo>>();
 
-            //Act
-            var result = _controller.GetNumberOfAgents();
+            _mockRepository.Setup(repository => repository.GetAgents()).Returns(listAgents);
+            var result = (OkObjectResult)_controller.GetNumberOfAgents();
 
-            //Assert
-            _ = Assert.IsAssignableFrom<IActionResult>(result);
+            _mockRepository.Verify(repository => repository.GetAgents(), Times.Once());
+
+            Assert.IsAssignableFrom<IActionResult>(result);
+            Assert.Equal(listAgents, result.Value);
         }
     }
 }

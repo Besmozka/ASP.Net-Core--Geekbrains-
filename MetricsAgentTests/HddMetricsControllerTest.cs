@@ -17,17 +17,23 @@ namespace MetricsAgentTests
     {
         private HddMetricsController _controller;
 
+
         private Mock<ILogger<HddMetricsController>> _mockLogger;
 
+
         private Mock<IHddMetricsRepository> _mockRepository;
+
+
         public HddControllerUnitTests()
         {
             _mockLogger = new Mock<ILogger<HddMetricsController>>();
             _mockRepository = new Mock<IHddMetricsRepository>();
-            var mapperConfiguration = new MapperConfiguration(mp => mp.CreateMap<HddMetric, HddMetricDto>());
-            var mapper = mapperConfiguration.CreateMapper();
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(mp =>
+                mp.CreateMap<HddMetric, HddMetricDto>());
+            IMapper mapper = mapperConfiguration.CreateMapper();
             _controller = new HddMetricsController(_mockLogger.Object, _mockRepository.Object, mapper);
         }
+
 
         [Fact]
         public void GetSizeLeft_ReturnsOk()
@@ -39,7 +45,7 @@ namespace MetricsAgentTests
                 .Returns(returnList);
 
             var resultGetSizeLeft = (OkObjectResult)_controller.GetHddSizeLeft();
-            var returnListDto = (AllMetricsResponse<HddMetric>)resultGetSizeLeft.Value;
+            var returnListDto = (AllMetricsResponse<HddMetricDto>)resultGetSizeLeft.Value;
 
             _mockRepository.Verify(repository => repository.GetByTimePeriod(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()), 
                 Times.Once());
