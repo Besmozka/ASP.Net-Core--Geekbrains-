@@ -11,19 +11,18 @@ namespace MetricsAgent.Jobs
     {
         private INetworkMetricsRepository _repository;
 
-        // счетчик для метрики CPU
-        private PerformanceCounter _cpuCounter;
+        private PerformanceCounter _networkCounter;
 
         public NetworkMetricJob(INetworkMetricsRepository repository)
         {
             _repository = repository;
-            _cpuCounter = new PerformanceCounter("Сетевой интерфейс", "Текущая пропускная способность",
+            _networkCounter = new PerformanceCounter("Сетевой интерфейс", "Текущая пропускная способность",
                 "Realtek PCIe GbE Family Controller");
         }
 
         public Task Execute(IJobExecutionContext context)
         {
-            var NetworkDataTransferRate = Convert.ToInt32(_cpuCounter.NextValue());
+            var NetworkDataTransferRate = Convert.ToInt32(_networkCounter.NextValue());
 
             var time = DateTimeOffset.UtcNow;
 

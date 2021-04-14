@@ -1,23 +1,28 @@
-﻿using Dapper;
-using MetricsAgent.DAL.Handlers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
+using Dapper;
+using MetricsAgent.DAL.Handlers;
+using MetricsAgent.SQLSettingsProvider;
 
-namespace MetricsAgent.DAL
+namespace MetricsAgent.DAL.Repositories
 {
     public class CpuMetricsRepository : ICpuMetricsRepository
     {
-        private const string ConnectionString = @"Data Source=metrics.db; Version=3;Pooling=True;Max Pool Size=100;";
+        private readonly ISqlSettingsProvider _sqlSettingsProvider;
 
-        public CpuMetricsRepository()
+
+        public CpuMetricsRepository(ISqlSettingsProvider sqlSettingsProvider)
         {
+            _sqlSettingsProvider = sqlSettingsProvider;
             SqlMapper.AddTypeHandler(new DateTimeOffsetHandler());
         }
+
+
         public void Create(CpuMetric item)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = new SQLiteConnection(_sqlSettingsProvider.GetConnectionString()))
             {
                 connection.Execute("INSERT INTO cpumetrics(value, time) VALUES(@value, @time)",
                     new
@@ -28,9 +33,10 @@ namespace MetricsAgent.DAL
             }
         }
 
+
         public List<CpuMetric> GetByTimePeriod(DateTimeOffset fromTime, DateTimeOffset toTime)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = new SQLiteConnection(_sqlSettingsProvider.GetConnectionString()))
             {
                 return connection.Query<CpuMetric>("SELECT Id, Time, Value FROM cpumetrics WHERE Time>=@fromTime AND Time<=@toTime",
                     new { fromTime = fromTime.ToUnixTimeSeconds(), toTime = toTime.ToUnixTimeSeconds() }).ToList();

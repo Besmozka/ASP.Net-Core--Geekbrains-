@@ -11,18 +11,17 @@ namespace MetricsAgent.Jobs
     {
         private IRamMetricsRepository _repository;
 
-        // счетчик для метрики CPU
-        private PerformanceCounter _cpuCounter;
+        private PerformanceCounter _ramCounter;
 
         public RamMetricJob(IRamMetricsRepository repository)
         {
             _repository = repository;
-            _cpuCounter = new PerformanceCounter("Память", "Доступно МБ");
+            _ramCounter = new PerformanceCounter("Память", "Доступно МБ");
         }
 
         public Task Execute(IJobExecutionContext context)
         {
-            var ramAvialable = Convert.ToInt32(_cpuCounter.NextValue());
+            var ramAvialable = Convert.ToInt32(_ramCounter.NextValue());
 
             var time = DateTimeOffset.UtcNow;
 

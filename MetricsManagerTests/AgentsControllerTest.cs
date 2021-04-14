@@ -42,6 +42,7 @@ namespace MetricsManagerTests
         [Fact]
         public void AgentRegister_ReturnsOk()
         {
+            var returnList = _fixture.Create<List<AgentInfo>>();
             AgentInfo agentInfo = new AgentInfo
             {
                 AgentId = _random.Next(_maxAgentsCount), 
@@ -49,12 +50,14 @@ namespace MetricsManagerTests
 
             };
 
-            _mockRepository.Setup(repository => repository.Create(It.IsAny<AgentInfo>())).Verifiable();
+            _mockRepository.Setup(repository => repository.GetAgents()).Returns(returnList);
+            _mockRepository.Setup(repository =>repository.Create(It.IsAny<AgentInfo>())).Verifiable();
             var resultAgentRegister = _controller.RegisterAgent(agentInfo);
 
+            _mockRepository.Verify(repository => repository.GetAgents(), Times.Once);
             _mockRepository.Verify(repository => repository.Create(It.IsAny<AgentInfo>()), Times.Once);
 
-            _ = Assert.IsAssignableFrom<IActionResult>(resultAgentRegister);
+            Assert.IsAssignableFrom<IActionResult>(resultAgentRegister);
         }
 
 
@@ -82,7 +85,7 @@ namespace MetricsManagerTests
             _mockRepository.Verify(repository => repository.GetAgents(), Times.Once());
 
             Assert.IsAssignableFrom<IActionResult>(result);
-            Assert.Equal(listAgents, result.Value);
+            Assert.Equal($"Количество агентов: {listAgents.Count}", result.Value);
         }
     }
 }

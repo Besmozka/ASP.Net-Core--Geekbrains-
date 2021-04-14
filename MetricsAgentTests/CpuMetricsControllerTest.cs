@@ -11,6 +11,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using Xunit;
+using MetricsAgent.SQLSettingsProvider;
 
 namespace MetricsAgentTests
 {

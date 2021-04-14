@@ -5,20 +5,25 @@ using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
+using MetricsManager.SQLSettingsProvider;
 
 namespace MetricsManager.DAL.Repositories
 {
     public class HddMetricsRepository : IMetricsRepository<HddMetric>
     {
-        private const string ConnectionString = @"Data Source=ManagerMetrics.db";
+        private readonly ISqlSettingsProvider _sqlSettingsProvider;
 
-        public HddMetricsRepository()
+
+        public HddMetricsRepository(ISqlSettingsProvider sqlSettingsProvider)
         {
+            _sqlSettingsProvider = sqlSettingsProvider;
             SqlMapper.AddTypeHandler(new DateTimeOffsetHandler());
         }
+
+
         public void Create(HddMetric item)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = new SQLiteConnection(_sqlSettingsProvider.GetConnectionString()))
             {
                 connection.Execute("INSERT INTO hddmetrics(agentid, value, time) VALUES(@agentid, @value, @time)",
                     new
@@ -30,9 +35,10 @@ namespace MetricsManager.DAL.Repositories
             }
         }
 
+
         public DateTimeOffset GetLastMetricTime(int agentId)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = new SQLiteConnection(_sqlSettingsProvider.GetConnectionString()))
             {
                 var metrics = connection.Query<HddMetric>("SELECT * FROM hddmetrics").ToList();
                 if (metrics.Count != 0)
@@ -43,18 +49,20 @@ namespace MetricsManager.DAL.Repositories
             }
         }
 
+
         public List<HddMetric> GetAgentMetricByTimePeriod(int agentId, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = new SQLiteConnection(_sqlSettingsProvider.GetConnectionString()))
             {
                 return connection.Query<HddMetric>("SELECT Id, AgentId, Time, Value FROM hddmetrics WHERE AgentId==@agentId AND Time>=@fromTime AND Time<=@toTime",
                     new { agentId = agentId, fromTime = fromTime.ToUnixTimeSeconds(), toTime = toTime.ToUnixTimeSeconds() }).ToList();
             }
         }
 
+
         public List<HddMetric> GetClusterMetricsByTimePeriod(DateTimeOffset fromTime, DateTimeOffset toTime)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = new SQLiteConnection(_sqlSettingsProvider.GetConnectionString()))
             {
                 return connection.Query<HddMetric>("SELECT Id, AgentId, Time, Value FROM hddmetrics WHERE Time>=@fromTime AND Time<=@toTime",
                     new { fromTime = fromTime.ToUnixTimeSeconds(), toTime = toTime.ToUnixTimeSeconds() }).ToList();

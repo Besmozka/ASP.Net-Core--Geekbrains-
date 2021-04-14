@@ -16,12 +16,13 @@ using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 using System;
+using MetricsManager.SQLSettingsProvider;
 
 namespace MetricsManager
 {
     public class Startup
     {
-        private const string ConnectionString = @"Data Source=ManagerMetrics.db";
+        private ISqlSettingsProvider sqlSettingsProvider = new SqlSettingsProvider();
 
         public Startup(IConfiguration configuration)
         {
@@ -39,6 +40,7 @@ namespace MetricsManager
             var mapper = mapperConfiguration.CreateMapper();
             services.AddSingleton(mapper);
             services.AddSingleton<AgentsList>();
+            services.AddSingleton<ISqlSettingsProvider,SqlSettingsProvider>();
 
             services.AddHttpClient<IMetricsAgentClient, MetricsAgentClient>()
                 .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(1000)));
@@ -49,7 +51,7 @@ namespace MetricsManager
                     // добавляем поддержку SQLite 
                     .AddSQLite()
                     // устанавливаем строку подключения
-                    .WithGlobalConnectionString(ConnectionString)
+                    .WithGlobalConnectionString(sqlSettingsProvider.GetConnectionString())
                     // подсказываем где искать классы с миграциями
                     .ScanIn(typeof(Startup).Assembly).For.Migrations()
                 ).AddLogging(lb => lb
