@@ -39,12 +39,14 @@ namespace MetricsManager
             var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfile()));
             var mapper = mapperConfiguration.CreateMapper();
             services.AddSingleton(mapper);
+
             services.AddSingleton<AgentsList>();
             services.AddSingleton<ISqlSettingsProvider,SqlSettingsProvider>();
 
             services.AddHttpClient<IMetricsAgentClient, MetricsAgentClient>()
                 .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(1000)));
 
+            //services.AddSwaggerGen();
 
             services.AddFluentMigratorCore()
                 .ConfigureRunner(rb => rb
@@ -109,6 +111,17 @@ namespace MetricsManager
             {
                 endpoints.MapControllers();
             });
+
+            //// Включение middleware в пайплайн для обработки Swagger запросов.
+            //app.UseSwagger();
+            //// включение middleware для генерации swagger-ui 
+            //// указываем Swagger JSON эндпоинт (куда обращаться за сгенерированной спецификацией
+            //// по которой будет построен UI).
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API сервиса агента сбора метрик");
+            //});
+
         }
     }
 }
