@@ -29,19 +29,21 @@ namespace MetricsAgent.Controllers
 
 
         /// <summary>
-        /// Получает метрики CPU на заданном диапазоне времени
+        /// Получает количество свободного места на HDD в заданном диапазоне времени
         /// </summary>
         /// <remarks>
         /// Пример запроса:
         ///
-        ///     GET cpumetrics/from/1/to/9999999999
+        ///     GET hddmetrics/from/00:00:00/to/23:59:59
+        /// , если необходимо указать дату
+        ///     GET hddmetrics/from/1970-01-01T00:00:00.070Z/to/2022-10-02T05:04:18.070Z
         ///
         /// </remarks>
-        /// <param name="fromTime">начальная метрка времени в секундах с 01.01.1970</param>
-        /// <param name="toTime">конечная метрка времени в секундах с 01.01.1970</param>
+        /// <param name="fromTime">начальная метрика времени с 01.01.1970</param>
+        /// <param name="toTime">конечная метрика времени с 01.01.1970</param>
         /// <returns>Список метрик, которые были сохранены в заданном диапазоне времени</returns>
-        /// <response code="201">Если все хорошо</response>
-        /// <response code="400">если передали не правильные параетры</response>  
+        /// <response code="200">Если все хорошо</response>
+        /// <response code="400">если передали не правильные параметры</response>  
         [HttpGet("left")]
         public IActionResult GetHddSizeLeft()
         {

@@ -26,6 +26,26 @@ namespace MetricsManager.Controllers
         }
 
 
+        /// <summary>
+        /// Регистрирует нового агента
+        /// </summary>
+        /// <remarks>
+        /// Данные передаются в теле запроса
+        /// Пример запроса:
+        /// 
+        ///     POST api/agents
+        /// Body.json
+        /// {
+        ///     AgentId = 1,
+        ///     AgentAddress = http://localhost:5000
+        /// }
+        /// 
+        /// </remarks>
+        /// <param name="AgentId">Id клиента</param>
+        /// <param name="AgentAddress">URL адрес клиента</param>
+        /// <response code="200">Если все хорошо</response>
+        /// <response code="400">если передали не правильные параметры</response>  
+        /// 
         [HttpPost("register")]
         public IActionResult RegisterAgent([FromBody] AgentInfo agentInfo)
         {
@@ -40,6 +60,19 @@ namespace MetricsManager.Controllers
         }
 
 
+        /// <summary>
+        /// Удаляет агента
+        /// </summary>
+        /// <remarks>
+        /// Пример запроса:
+        /// 
+        ///     DELETE api/delete/"http://localhost:5000"
+        ///  
+        /// </remarks>
+        /// <param name="AgentAddress">URL адрес клиента</param>
+        /// <response code="200">Если все хорошо</response>
+        /// <response code="400">если передали не правильные параметры</response>  
+        ///
         [HttpDelete("delete/{agentAddress}")]
         public IActionResult DeleteAgent([FromRoute] string agentAddress)
         {
@@ -49,6 +82,19 @@ namespace MetricsManager.Controllers
         }
 
 
+        /// <summary>
+        /// Получает количество зарегистрированных клиентов
+        /// </summary>
+        /// <remarks>
+        /// Пример запроса:
+        /// 
+        ///     POST api/numberAgents
+        /// 
+        /// </remarks>
+        /// <returns>Возвращается количество зарегистрированных клиентов</returns>
+        /// <response code="200">Если все хорошо</response>
+        /// <response code="400">если передали не правильные параметры</response>  
+        ///
         [HttpGet("numberAgents")]
         public IActionResult GetNumberOfAgents()
         {
