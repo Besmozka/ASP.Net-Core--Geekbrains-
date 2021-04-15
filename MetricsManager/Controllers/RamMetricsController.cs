@@ -21,6 +21,8 @@ namespace MetricsManager.Controllers
         private readonly IMetricsRepository<RamMetric> _repository;
 
         private readonly IMapper _mapper;
+
+
         public RamMetricsController(ILogger<RamMetricsController> logger, IMetricsRepository<RamMetric> repository, IMapper mapper)
         {
             _logger = logger;
@@ -28,6 +30,7 @@ namespace MetricsManager.Controllers
             _repository = repository;
             _mapper = mapper;
         }
+
 
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetRamMetricsFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
@@ -47,6 +50,7 @@ namespace MetricsManager.Controllers
             }
             return Ok(response);
         }
+
 
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}/percentiles/{percentile}")]
         public IActionResult GetRamMetricsByPercentileFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime,
@@ -69,6 +73,7 @@ namespace MetricsManager.Controllers
             return Ok(response);
         }
 
+
         [HttpGet("cluster/from/{fromTime}/to/{toTime}")]
         public IActionResult GetRamMetricsFromAllCluster([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
@@ -87,6 +92,7 @@ namespace MetricsManager.Controllers
             }
             return Ok(response);
         }
+
 
         [HttpGet("cluster/from/{fromTime}/to/{toTime}/percentiles/{percentile}")]
         public IActionResult GetRamMetricsByPercentileFromAllCluster([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime,

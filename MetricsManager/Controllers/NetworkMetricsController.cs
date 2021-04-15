@@ -21,6 +21,7 @@ namespace MetricsManager.Controllers
 
         private readonly IMapper _mapper;
 
+
         public NetworkMetricsController(ILogger<NetworkMetricsController> logger, IMetricsRepository<NetworkMetric> repository, IMapper mapper)
         {
             _logger = logger;
@@ -28,6 +29,7 @@ namespace MetricsManager.Controllers
             _repository = repository;
             _mapper = mapper;
         }
+
 
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetNetworkMetricsFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)

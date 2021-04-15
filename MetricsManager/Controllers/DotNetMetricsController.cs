@@ -21,6 +21,7 @@ namespace MetricsManager.Controllers
 
         private readonly IMapper _mapper;
 
+
         public DotNetMetricsController(ILogger<DotNetMetricsController> logger, IMetricsRepository<DotNetMetric> repository, IMapper mapper)
         {
             _logger = logger;
@@ -28,6 +29,7 @@ namespace MetricsManager.Controllers
             _repository = repository;
             _mapper = mapper;
         }
+
 
         [HttpGet("errors-count/agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetDotNetMetricsFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)

@@ -30,6 +30,7 @@ namespace MetricsManager.Controllers
             _mapper = mapper;
         }
 
+
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetHddMetricsFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
@@ -48,6 +49,7 @@ namespace MetricsManager.Controllers
             }
             return Ok(response);
         }
+
 
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}/percentiles/{percentile}")]
         public IActionResult GetHddMetricsByPercentileFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime,
@@ -70,6 +72,7 @@ namespace MetricsManager.Controllers
             return Ok(response);
         }
 
+
         [HttpGet("cluster/from/{fromTime}/to/{toTime}")]
         public IActionResult GetHddMetricsFromAllCluster([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
@@ -88,6 +91,7 @@ namespace MetricsManager.Controllers
             }
             return Ok(response);
         }
+
 
         [HttpGet("cluster/from/{fromTime}/to/{toTime}/percentiles/{percentile}")]
         public IActionResult GetHddMetricsByPercentileFromAllCluster([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime,

@@ -29,6 +29,7 @@ namespace MetricsManager.Controllers
             _mapper = mapper;
         }
 
+
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetCpuMetricsFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
@@ -46,6 +47,7 @@ namespace MetricsManager.Controllers
             }
             return Ok(response);
         }
+
 
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}/percentiles/{percentile}")]
         public IActionResult GetCpuMetricsByPercentileFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime,
@@ -67,6 +69,7 @@ namespace MetricsManager.Controllers
             return Ok(response);
         }
 
+
         [HttpGet("cluster/from/{fromTime}/to/{toTime}")]
         public IActionResult GetCpuMetricsFromAllCluster([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
@@ -85,6 +88,7 @@ namespace MetricsManager.Controllers
             }
             return Ok(response);
         }
+
 
         [HttpGet("cluster/from/{fromTime}/to/{toTime}/percentiles/{percentile}")]
         public IActionResult GetCpuMetricsByPercentileFromAllCluster([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime,
