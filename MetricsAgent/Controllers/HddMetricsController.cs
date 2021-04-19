@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MetricsAgent;
 using MetricsAgent.DAL;
 using MetricsAgent.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 
-namespace MetricsManager.Controllers
+namespace MetricsAgent.Controllers
 {
     [Route("api/metrics/hdd")]
     [ApiController]

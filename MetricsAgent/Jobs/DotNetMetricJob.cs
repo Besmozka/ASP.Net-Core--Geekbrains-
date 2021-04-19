@@ -11,18 +11,17 @@ namespace MetricsAgent.Jobs
     {
         private IDotNetMetricsRepository _repository;
 
-        // счетчик для метрики CPU
-        private PerformanceCounter _cpuCounter;
+        private PerformanceCounter _dotNetCounter;
 
         public DotNetMetricJob(IDotNetMetricsRepository repository)
         {
             _repository = repository;
-            _cpuCounter = new PerformanceCounter("Приложения ASP.NET", "Общее число ошибок", "__Total__");
+            _dotNetCounter = new PerformanceCounter("Приложения ASP.NET", "Общее число ошибок", "__Total__");
         }
 
         public Task Execute(IJobExecutionContext context)
         {
-            var DotNetErrorsCount = Convert.ToInt32(_cpuCounter.NextValue());
+            var DotNetErrorsCount = Convert.ToInt32(_dotNetCounter.NextValue());
 
             var time = DateTimeOffset.UtcNow;
 

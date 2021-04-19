@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using MetricsManager.DAL;
+using System.Collections.Generic;
 
 namespace MetricsManager
 {
     public class AgentsList
     {
-        public List<AgentInfo> agents = new List<AgentInfo>();
+        public List<AgentInfo> Agents = new List<AgentInfo>();
     }
 }

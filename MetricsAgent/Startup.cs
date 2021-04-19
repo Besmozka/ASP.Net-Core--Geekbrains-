@@ -1,8 +1,10 @@
 using AutoMapper;
 using FluentMigrator.Runner;
 using MetricsAgent.DAL;
+using MetricsAgent.DAL.Repositories;
 using MetricsAgent.Jobs;
 using MetricsAgent.Services;
+using MetricsAgent.SQLSettingsProvider;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,13 +13,13 @@ using Microsoft.Extensions.Hosting;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
-using System;
 
 namespace MetricsAgent
 {
     public class Startup
     {
-        private const string ConnectionString = "Data Source=metrics.db";
+        private ISqlSettingsProvider sqlSettingsProvider = new SqlSettingsProvider();
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -34,6 +36,8 @@ namespace MetricsAgent
             var mapper = mapperConfiguration.CreateMapper();
             services.AddSingleton(mapper);
 
+            services.AddSingleton<ISqlSettingsProvider, SqlSettingsProvider>();
+
             services.AddSingleton<ICpuMetricsRepository, CpuMetricsRepository>();
             services.AddSingleton<IDotNetMetricsRepository, DotNetMetricsRepository>();
             services.AddSingleton<IHddMetricsRepository, HddMetricsRepository>();
@@ -45,7 +49,7 @@ namespace MetricsAgent
                     // добавляем поддержку SQLite 
                     .AddSQLite()
                     // устанавливаем строку подключения
-                    .WithGlobalConnectionString(ConnectionString)
+                    .WithGlobalConnectionString(sqlSettingsProvider.GetConnectionString())
                     // подсказываем где искать классы с миграциями
                     .ScanIn(typeof(Startup).Assembly).For.Migrations()
                 ).AddLogging(lb => lb
@@ -77,12 +81,13 @@ namespace MetricsAgent
                 cronExpression: "0/2 * * * * ?"));
 
             services.AddHostedService<QuartzHostedService>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMigrationRunner migrationRunner)
         {
+            migrationRunner.MigrateUp();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -96,8 +101,6 @@ namespace MetricsAgent
             {
                 endpoints.MapControllers();
             });
-
-            migrationRunner.MigrateUp();
         }
     }
 }

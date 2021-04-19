@@ -11,18 +11,17 @@ namespace MetricsAgent.Jobs
     {
         private IHddMetricsRepository _repository;
 
-        // счетчик для метрики CPU
-        private PerformanceCounter _cpuCounter;
+        private PerformanceCounter _hddCounter;
 
         public HddMetricJob(IHddMetricsRepository repository)
         {
             _repository = repository;
-            _cpuCounter = new PerformanceCounter("Логический диск", "Свободно мегабайт", "_Total");
+            _hddCounter = new PerformanceCounter("Логический диск", "Свободно мегабайт", "_Total");
         }
 
         public Task Execute(IJobExecutionContext context)
         {
-            var HddLeftSize = Convert.ToInt32(_cpuCounter.NextValue());
+            var HddLeftSize = Convert.ToInt32(_hddCounter.NextValue());
 
             var time = DateTimeOffset.UtcNow;
 
