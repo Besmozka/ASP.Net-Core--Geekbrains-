@@ -40,10 +40,10 @@ namespace MetricsManager.DAL.Repositories
         {
             using (var connection = new SQLiteConnection(_sqlSettingsProvider.GetConnectionString()))
             {
-                var metrics = connection.Query<CpuMetric>("SELECT * FROM cpumetrics").ToList();
-                if (metrics.Count != 0)
+                var metrics = connection.QuerySingle<CpuMetric>("SELECT MAX(Time) FROM cpumetrics WHERE AgentId = @agentId", new { agentId = agentId});
+                if (metrics != null)
                 {
-                    return metrics.Max(item => item.Time);
+                    return metrics.Time;
                 }
                 return DateTimeOffset.MinValue;
             }
