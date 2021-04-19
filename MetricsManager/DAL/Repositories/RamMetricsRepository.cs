@@ -35,10 +35,11 @@ namespace MetricsManager.DAL.Repositories
         {
             using (var connection = new SQLiteConnection(_sqlSettingsProvider.GetConnectionString()))
             {
-                var metrics = connection.Query<RamMetric>("SELECT * FROM rammetrics").ToList();
-                if (metrics.Count != 0)
+                var metrics = connection.QuerySingle<CpuMetric>("SELECT MAX(Time) FROM rammetrics WHERE AgentId = @agentId",
+                    new { agentId = agentId });
+                if (metrics != null)
                 {
-                    return metrics.Max(item => item.Time);
+                    return metrics.Time;
                 }
                 return DateTimeOffset.MinValue;
             }
