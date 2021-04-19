@@ -21,6 +21,7 @@ namespace MetricsManager.Controllers
 
         private readonly IMapper _mapper;
 
+
         public DotNetMetricsController(ILogger<DotNetMetricsController> logger, IMetricsRepository<DotNetMetric> repository, IMapper mapper)
         {
             _logger = logger;
@@ -29,6 +30,25 @@ namespace MetricsManager.Controllers
             _mapper = mapper;
         }
 
+
+        /// <summary>
+        /// Получает метрики DotNet на заданном диапазоне времени от определенного агента
+        /// </summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET api/metrics/dotnet/errors-count/agent/1/from/00:00:00/to/23:59:59
+        /// , если необходимо указать дату
+        ///     GET api/metrics/dotnet/errors-count/agent/1/from/1970-01-01T00:00:00.070Z/to/2022-10-02T05:04:18.070Z
+        ///
+        /// </remarks>
+        /// <param name="agentId">Id клиента</param>
+        /// <param name="fromTime">начальная метрика времени с 01.01.1970</param>
+        /// <param name="toTime">конечная метрика времени с 01.01.1970</param>
+        /// <returns>Список метрик, от определенного агента, которые были сохранены в заданном диапазоне времени </returns>
+        /// <response code="200">Если все хорошо</response>
+        /// <response code="400">если передали не правильные параметры</response>  
+        /// 
         [HttpGet("errors-count/agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetDotNetMetricsFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {

@@ -30,6 +30,25 @@ namespace MetricsManager.Controllers
             _mapper = mapper;
         }
 
+
+        /// <summary>
+        /// Получает метрики HDD на заданном диапазоне времени от определенного агента
+        /// </summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET api/metrics/hdd/agent/1/from/00:00:00/to/23:59:59
+        /// , если необходимо указать дату
+        ///     GET api/metrics/hdd/agent/1/from/1970-01-01T00:00:00.070Z/to/2022-10-02T05:04:18.070Z
+        ///
+        /// </remarks>
+        /// <param name="agentId">Id клиента</param>
+        /// <param name="fromTime">начальная метрика времени с 01.01.1970</param>
+        /// <param name="toTime">конечная метрика времени с 01.01.1970</param>
+        /// <returns>Список метрик, от определенного агента, которые были сохранены в заданном диапазоне времени </returns>
+        /// <response code="200">Если все хорошо</response>
+        /// <response code="400">если передали не правильные параметры</response>  
+        /// 
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetHddMetricsFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
@@ -49,6 +68,26 @@ namespace MetricsManager.Controllers
             return Ok(response);
         }
 
+
+        /// <summary>
+        /// Получает персентиль метрик HDD на заданном диапазоне времени от определенного агента
+        /// </summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET api/metrics/hdd/agent/1/from/00:00:00/to/23:59:59/percentiles/P.95
+        /// , если необходимо указать дату
+        ///     GET api/metrics/hdd/agent/1/from/1970-01-01T00:00:00.070Z/to/2022-10-02T05:04:18.070Z/percentiles/P.99
+        ///
+        /// </remarks>
+        /// <param name="agentId">Id клиента</param>
+        /// <param name="fromTime">начальная метрика времени с 01.01.1970</param>
+        /// <param name="toTime">конечная метрика времени с 01.01.1970</param>
+        /// <param name="percentile">персентиль из списка: Median, P75, P90, P95, P99</param>
+        /// <returns>Список метрик, от определенного агента, которые были сохранены в заданном диапазоне времени </returns>
+        /// <response code="200">Если все хорошо</response>
+        /// <response code="400">если передали не правильные параметры</response>  
+        /// 
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}/percentiles/{percentile}")]
         public IActionResult GetHddMetricsByPercentileFromAgent([FromRoute] int agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime,
             [FromRoute] Percentile percentile)
@@ -70,6 +109,24 @@ namespace MetricsManager.Controllers
             return Ok(response);
         }
 
+
+        /// <summary>
+        /// Получает метрики HDD на заданном диапазоне времени от всего кластера
+        /// </summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET api/metrics/hdd/cluster/from/00:00:00/to/23:59:59
+        /// , если необходимо указать дату
+        ///     GET api/metrics/hdd/cluster/from/1970-01-01T00:00:00.070Z/to/2022-10-02T05:04:18.070Z
+        ///
+        /// </remarks>
+        /// <param name="fromTime">начальная метрика времени с 01.01.1970</param>
+        /// <param name="toTime">конечная метрика времени с 01.01.1970</param>
+        /// <returns>Список метрик, от всего кластера, которые были сохранены в заданном диапазоне времени </returns>
+        /// <response code="200">Если все хорошо</response>
+        /// <response code="400">если передали не правильные параметры</response>  
+        /// 
         [HttpGet("cluster/from/{fromTime}/to/{toTime}")]
         public IActionResult GetHddMetricsFromAllCluster([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
@@ -89,6 +146,25 @@ namespace MetricsManager.Controllers
             return Ok(response);
         }
 
+
+        /// <summary>
+        /// Получает персентиль метрик HDD на заданном диапазоне времени от всего кластера
+        /// </summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET api/metrics/hdd/cluster/from/00:00:00/to/23:59:59/percentiles/P.95
+        /// , если необходимо указать дату
+        ///     GET api/metrics/hdd/cluster/from/1970-01-01T00:00:00.070Z/to/2022-10-02T05:04:18.070Z/percentiles/P.99
+        ///
+        /// </remarks>
+        /// <param name="fromTime">начальная метрика времени с 01.01.1970</param>
+        /// <param name="toTime">конечная метрика времени с 01.01.1970</param>
+        /// <param name="percentile">персентиль из списка: Median, P75, P90, P95, P99</param>
+        /// <returns>Список метрик, от всего кластера, которые были сохранены в заданном диапазоне времени </returns>
+        /// <response code="200">Если все хорошо</response>
+        /// <response code="400">если передали не правильные параметры</response>  
+        /// 
         [HttpGet("cluster/from/{fromTime}/to/{toTime}/percentiles/{percentile}")]
         public IActionResult GetHddMetricsByPercentileFromAllCluster([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime,
             [FromRoute] Percentile percentile)
