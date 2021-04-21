@@ -7,13 +7,13 @@
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:local="clr-namespace:MetricsManagerWPFClient" d:DataContext="{d:DesignInstance Type=local:MaterialCards}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Height="500" Width="650" >
+             d:DesignHeight="450" d:DesignWidth="650">
+    <Grid Height="450" Width="650" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <Grid Margin="15, 20, 15, 15" MaxHeight="350">
+        <Grid MaxHeight="350">
             <Grid.Effect>
                 <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" Opacity=".2" ShadowDepth="1"/>
             </Grid.Effect>
@@ -56,9 +56,7 @@
             </Grid.RowDefinitions>
             <Border x:Name="Border2" Grid.Row="0" Grid.RowSpan="4" CornerRadius="5" Background="White" />
             <Border Grid.Row="0" Grid.RowSpan="3" Background="#EB5A13" ></Border>
-            <TextBlock Grid.Row="0" TextAlignment="Center" Padding="10, 10, 0, 5" Foreground="White" FontSize="18">
-                    Cpu Load
-            </TextBlock>
+            <TextBlock x:Name="TextBlock"  Grid.Row="0" TextAlignment="Center" Padding="10, 10, 0, 5" Foreground="White" FontSize="18" Text="Chart"/>
             <Button Grid.Row="2" Width="40" Height="40" VerticalAlignment="Bottom" 
                     HorizontalAlignment="Right" Margin="0,0,20,136" Panel.ZIndex="1"
                     Click="UpdateOnСlick" Grid.RowSpan="2">

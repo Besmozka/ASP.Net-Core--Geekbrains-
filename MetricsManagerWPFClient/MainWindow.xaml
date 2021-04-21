@@ -6,10 +6,26 @@
         xmlns:metricsManagerWpfClient="clr-namespace:MetricsManagerWPFClient"
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="1600">
-    <Grid>
-        <StackPanel>
-            <metricsManagerWpfClient:MaterialCards Grid.Column="0" Grid.Row="0" x:Name="CpuChart"></metricsManagerWpfClient:MaterialCards>
-            <Button Height="35" Click="Button_Click" Margin="596,0,906,0" RenderTransformOrigin="-1.215,-1.263" Content="Привет"/>
-        </StackPanel>
+    <Grid RenderTransformOrigin="0.783,0.485">
+        <Grid Margin="0,0,326,0">
+            <metricsManagerWpfClient:MaterialCards x:Name="CpuChart" Margin="4,-46,612,408" RenderTransformOrigin="0.5,0.5" NameChart="CpuChart"/>
+            <metricsManagerWpfClient:MaterialCards x:Name="HddChart" Margin="0,336,612,30" RenderTransformOrigin="0.5,0.5" NameChart="HddChart"/>
+            <metricsManagerWpfClient:MaterialCards x:Name="DotNetChart" Margin="680,336,-64,26" RenderTransformOrigin="0.5,0.5" NameChart=".NetChart"/>
+            <metricsManagerWpfClient:MaterialCards x:Name="RamChart" Margin="680,-46,-64,408" RenderTransformOrigin="0.5,0.5" NameChart="RamChart"/>
+        </Grid>
+        <Grid HorizontalAlignment="Left" Height="769" VerticalAlignment="Top" Width="247" Margin="1345,0,0,0">
+            <Button Content="RAM" HorizontalAlignment="Left" Margin="44,192,0,0" VerticalAlignment="Top" Width="74" Click="GetRAM_OnClick" RenderTransformOrigin="-0.46,-1.975"/>
+            <Button Content="HDD" HorizontalAlignment="Left" Margin="131,192,0,0" VerticalAlignment="Top" Width="75" Click="GetHDD_OnClick"/>
+            <Button Content="CPU" HorizontalAlignment="Left" Margin="131,240,0,0" VerticalAlignment="Top" Width="75" Click="GetCPU_OnClick"/>
+            <Button Content=".NET" HorizontalAlignment="Left" Margin="44,240,0,0" VerticalAlignment="Top" Width="74" Click="GetDotNet_OnClick"/>
+            <ComboBox Name="SetAgentId" HorizontalAlignment="Left" Margin="66,68,0,0" VerticalAlignment="Top" Width="120" IsEditable="True" Height="22"/>
+            <TextBox x:Name="SetAgentIdTextBox" HorizontalAlignment="Left" Height="17" Margin="66,51,0,0" TextWrapping="Wrap" Text="Выберите ID агента" VerticalAlignment="Top" Width="120" FontFamily="Times New Roman" RenderTransformOrigin="0.471,1.618" BorderThickness="0"/>
+            <DatePicker x:Name="FromDate" HorizontalAlignment="Left" Margin="5,143,0,0" VerticalAlignment="Top"/>
+            <DatePicker x:Name="ToDate" HorizontalAlignment="Left" Margin="145,143,0,0" VerticalAlignment="Top"/>
+            <TextBox HorizontalAlignment="Left" Height="35" Margin="5,108,0,0" TextWrapping="Wrap" Text="Дата начала выборки" VerticalAlignment="Top" Width="100" BorderThickness="0"/>
+            <TextBox HorizontalAlignment="Left" Height="35" Margin="145,108,0,0" TextWrapping="Wrap" Text="Дата конца выборки" VerticalAlignment="Top" Width="100" BorderThickness="0"/>
+            <Button Content="JSON формат всех метрик" HorizontalAlignment="Left" Margin="44,290,0,0" VerticalAlignment="Top" Width="162" Click="ButtonBase_OnClick" Height="32"/>
+            <CheckBox Content="Персентиль" HorizontalAlignment="Left" Margin="10,348,0,0" VerticalAlignment="Top"/>
+        </Grid>
     </Grid>
 </Window>

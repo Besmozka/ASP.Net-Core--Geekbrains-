@@ -1,0 +1,23 @@
+﻿<Window x:Class="MetricsManagerWPFClient.TextMetrics"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MetricsManagerWPFClient"
+        mc:Ignorable="d"
+        Title="TextMetrics" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TextBlock Margin="0" TextWrapping="Wrap" Text="CPU" FontFamily="Times New Roman" AutomationProperties.Name="CpuTextBlock"/>
+        <TextBlock Grid.Column="1" Margin="0" TextWrapping="Wrap" Text="RAM" FontFamily="Times New Roman" x:Name="RamTextBlock"/>
+        <TextBlock Grid.Column="2" Margin="0" TextWrapping="Wrap" Text="HDD" FontFamily="Times New Roman" x:Name="HddTextBlock"/>
+        <TextBlock Grid.Column="3" Margin="0" TextWrapping="Wrap" Text=".NET" FontFamily="Times New Roman" x:Name="DotNetTextBlock"/>
+        <TextBlock Grid.Column="4" Margin="0" TextWrapping="Wrap" Text="Network" FontFamily="Times New Roman" AutomationProperties.Name="NetworkTextBlock"/>
+    </Grid>
+</Window>

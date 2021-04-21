@@ -11,7 +11,6 @@ namespace MetricsManagerWPFClient
     /// </summary>
     public partial class MaterialCards : UserControl, INotifyPropertyChanged
     {
-
         public MaterialCards()
         {
             InitializeComponent();
@@ -27,6 +26,11 @@ namespace MetricsManagerWPFClient
             DataContext = this;
         }
 
+        public string NameChart
+        {
+            set { TextBlock.Text = value; }
+        }
+        
         public SeriesCollection ColumnServiesValues { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
